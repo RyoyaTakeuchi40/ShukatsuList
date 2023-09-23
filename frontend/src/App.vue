@@ -9,12 +9,8 @@ import Header from '@/components/Header.vue'
     <Header />
     <v-main>
       <v-container>
-        <v-card>
-          <router-view />
-        </v-card>
+        <router-view />
       </v-container>
     </v-main>
   </v-app>
 </template>
-
-<style scoped></style>
