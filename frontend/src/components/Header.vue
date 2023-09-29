@@ -45,7 +45,7 @@ const listItems = [
 </script>
 
 <template>
-  <v-app-bar app color="primary">
+  <v-app-bar app color="blue">
     <template v-slot:prepend>
       <RouterLink :to="home.link">
         <v-icon>{{ home.icon }}</v-icon>
