@@ -2,7 +2,5 @@
 </script>
 
 <template>
-  <v-container>
-    <v-sheet>詳細ページ</v-sheet>
-  </v-container>
+  <v-sheet>詳細ページ</v-sheet>
 </template>

@@ -120,6 +120,7 @@ const clickRow = (event: any, row: object) => {
     :headers="headers"
     :items="desserts"
     :hover="true"
+    :items-per-page="5"
     item-value="id"
     class="elevation-1"
     @click:row="clickRow"
@@ -145,7 +146,7 @@ const clickRow = (event: any, row: object) => {
       {{ item.selectable.fat }}    {{ item.selectable.fat2 }}
     </template>
 
-    <template v-slot:item.actions="{ item }">
+    <template v-slot:item.actions>
       <v-btn
         icon="mdi-pencil"
         size="small"
