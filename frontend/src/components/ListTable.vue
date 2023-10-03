@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { VDataTable } from 'vuetify/labs/components';
+import {
+  VDataTable
+} from "vuetify/labs/VDataTable"
 
 const headers = [
   {
@@ -109,7 +111,7 @@ const desserts = [
           },
 ]
 
-const clickRow = (event: any, row: object) => {
+function clickRow(event: any, row: object) {
   console.log(row.item.value)
   // window.open(`/${row.item.value}`, '_blanck')
 }

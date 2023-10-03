@@ -8,11 +8,11 @@ const username = ref('')
 const email = ref('')
 const password = ref('')
 
-const login = () => {
+function login() {
   router.push({ path: '/login' })
 }
 
-const register = () => { 
+function register() {
   router.push({ path: '/' })
 }
 </script>

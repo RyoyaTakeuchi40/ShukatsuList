@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+const auth = useAuthStore()
 
 const home = {
   icon: 'mdi-home',
@@ -27,7 +30,6 @@ const listItems = [
         {
           title: 'Dtail',
           value: 'detail',
-          to: '/detail',
           props: {
             prependIcon: 'mdi-close',
             to: '/detail',
@@ -41,7 +43,20 @@ const listItems = [
             to: '/login',
           },
         },
+        {
+          title: 'サンプル',
+          value: 'sample',
+          props: {
+            prependIcon: 'mdi-checkbox-marked-circle',
+            onClick: reset,
+          },
+        },
 ]
+
+function reset() {
+  auth.$reset()
+}
+
 </script>
 
 <template>

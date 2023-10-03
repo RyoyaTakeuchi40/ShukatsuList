@@ -1,17 +1,24 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
 const router = useRouter()
+const auth = useAuthStore()
 
 const showPassword = ref(false)
 const email = ref('')
 const password = ref('')
 
-const login = () => {
+function login() {
+  auth.$patch({
+    name: '竹内綾哉',
+    email: email.value,
+  })
   router.push({ path: '/' })
 }
 
-const register = () => { 
+function register() { 
   router.push({ path: '/register' })
 }
 </script>
