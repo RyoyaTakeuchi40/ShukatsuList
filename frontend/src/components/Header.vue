@@ -44,8 +44,8 @@ const listItems = [
           },
         },
         {
-          title: 'サンプル',
-          value: 'sample',
+          title: 'リセット',
+          value: 'reset',
           props: {
             prependIcon: 'mdi-checkbox-marked-circle',
             onClick: reset,
@@ -56,7 +56,6 @@ const listItems = [
 function reset() {
   auth.$reset()
 }
-
 </script>
 
 <template>
@@ -69,6 +68,11 @@ function reset() {
     <template v-slot:title>
       <v-app-bar-title>{{ title }}</v-app-bar-title>
     </template>
+    <v-spacer />
+    <v-app-bar-title>
+      <!-- ようこそ、{{ auth.name }}さん -->
+      {{ auth.name }}:{{ auth.email }}:{{ auth.userId }}
+    </v-app-bar-title>
     <template v-slot:append>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
       <v-menu activator=".v-app-bar-nav-icon">

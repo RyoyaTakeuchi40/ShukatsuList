@@ -14,4 +14,8 @@ counter.count++
   <v-card-text>username: {{ auth.name }}</v-card-text>
   <v-card-text>username: {{ auth.email }}</v-card-text>
   <v-btn @click="counter.increment">+1</v-btn>
+  <v-divider />
+  <v-btn>おりゃ</v-btn>
 </template>
+
+<style scoped></style>

@@ -1,35 +1,33 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-
 const router = useRouter()
-const auth = useAuthStore()
 
 const showPassword = ref(false)
+const username = ref('')
 const email = ref('')
 const password = ref('')
 
 function login() {
-  auth.$patch({
-    email: email.value,
-    userId: 'S50',
-  })
-  auth.changeName
-  router.push({ path: '/' })
+  router.push({ path: '/login' })
 }
 
-function register() { 
-  router.push({ path: '/register' })
+function register() {
+  router.push({ path: '/' })
 }
 </script>
 
 <template>
   <v-container>
     <v-card width="400px" class="mx-auto mt-5">
-      <v-card-title> ログイン </v-card-title>
+      <v-card-title> 新規登録 </v-card-title>
       <v-card-text>
         <v-form>
+          <v-text-field
+            prepend-icon="mdi-account-circle"
+            label="ユーザー名"
+            v-model="username"
+          />
           <v-text-field
             type="email"
             prepend-icon="mdi-email"
@@ -45,9 +43,9 @@ function register() {
             v-model="password"
           />
           <v-row>
-            <v-btn variant="text" @click="register">新規登録</v-btn>
+            <v-btn variant="text" @click="login">戻る</v-btn>
             <v-spacer />
-            <v-btn @click="login">ログイン</v-btn>
+            <v-btn @click="register">登録</v-btn>
           </v-row>
         </v-form>
       </v-card-text>

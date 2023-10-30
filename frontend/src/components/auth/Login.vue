@@ -12,10 +12,9 @@ const password = ref('')
 
 function login() {
   auth.$patch({
+    name: '竹内綾哉',
     email: email.value,
-    userId: 'S50',
   })
-  auth.changeName
   router.push({ path: '/' })
 }
 

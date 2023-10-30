@@ -3,5 +3,7 @@ import ListTable from '@/components/ListTable.vue'
 </script>
 
 <template>
+  <v-card>
     <ListTable />
+  </v-card>
 </template>
