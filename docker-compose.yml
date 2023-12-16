@@ -1,48 +1,60 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
-    container_name: frontend
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-    working_dir: /app
 
   backend:
-    build:
-      context: .
-      dockerfile: ./backend/Dockerfile
+    build: ./docker/backend
     container_name: backend
-    ports:
-      - "8080:8080"
     volumes:
-      - ./backend/src:/var/www
-    depends_on:
-      - db
+      - ./services/backend:/backend
+    ports:
+      - "8000:8000"
+    tty: true
 
+  frontend:
+    build: ./docker/frontend
+    container_name: frontend
+    volumes:
+      - ./services/frontend:/frontend
+    ports:
+      - "3000:3000"
+      - "24678:24678"
+    tty: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: ["npm", "run", "dev"]
+
+
+  web:
+    build: ./docker/web
+    container_name: web
+    volumes:
+      - ./services/backend:/backend
+      - ./services/frontend:/frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
 
   db:
     image: mysql:latest
     container_name: db
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
       - mysql-volume:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: shukatsu
-      MYSQL_USER: shukatsu
-      MYSQL_PASSWORD: shukatsu
-      MYSQL_ROOT_PASSWORD: local
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin
     ports: 
-      - 8888:80
+      - "8888:80"
     depends_on: 
       - db
 
