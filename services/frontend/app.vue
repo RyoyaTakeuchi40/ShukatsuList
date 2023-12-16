@@ -12,7 +12,7 @@
     <v-card>
       <v-card-text>
         <v-btn color="green">API</v-btn>
-        <v-list v-for="post in posts" :key="post.id">
+        <v-list v-for="post in posts" :key="post">
           <v-card-title>{{ post }}</v-card-title>
         </v-list>
       </v-card-text>
