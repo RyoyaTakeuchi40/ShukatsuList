@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\TestController; // ファイル内で使えるようにする
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,9 +32,5 @@ Route::prefix('/')->group(function () {
     });
 
 
-    Route::post('/test', function (){
-        return response()->json([
-            'message'=>'hello api.'
-        ]);
-    });
+    Route::get('/test', [TestController::class, 'index']); // 配列で書く
 });

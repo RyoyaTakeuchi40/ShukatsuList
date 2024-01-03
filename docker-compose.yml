@@ -10,6 +10,8 @@ services:
     ports:
       - "8000:8000"
     tty: true
+    depends_on:
+      - db
 
   frontend:
     build: ./docker/frontend
@@ -49,6 +51,7 @@ services:
       MYSQL_USER: '${DB_USERNAME}'
       MYSQL_PASSWORD: '${DB_PASSWORD}'
       MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD}'
+      TZ: 'Asia/Tokyo'
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
