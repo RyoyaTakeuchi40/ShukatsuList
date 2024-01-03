@@ -29,4 +29,11 @@ Route::prefix('/')->group(function () {
     Route::get('/laravel', function () {
         return view('welcome');
     });
+
+
+    Route::post('/test', function (){
+        return response()->json([
+            'message'=>'hello api.'
+        ]);
+    });
 });
