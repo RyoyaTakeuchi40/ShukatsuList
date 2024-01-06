@@ -11,9 +11,7 @@
 </template>
 
 <script setup lang="ts">
-const reset = () => {
-  console.log("reset");
-};
+const { handleLogout } = useAuth();
 const items = [
   // {
   //   title: "My Page",
@@ -39,20 +37,20 @@ const items = [
   //     to: "/detail",
   //   },
   // },
-  // {
-  //   title: "Log Out",
-  //   value: "log-out",
-  //   props: {
-  //     prependIcon: "mdi-logout",
-  //     to: "/login",
-  //   },
-  // },
+  {
+    title: "Log Out",
+    value: "log-out",
+    props: {
+      prependIcon: "mdi-logout",
+      to: "/login",
+      onClick: handleLogout,
+    },
+  },
   {
     title: "リセット",
     value: "reset",
     props: {
       prependIcon: "mdi-checkbox-marked-circle",
-      onClick: reset,
     },
   },
   {
