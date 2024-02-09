@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+// SPA認証
+Route::post('/login', 'AuthController@login');
+Route::post('/logout', 'AuthController@logout');
+
 Route::get('/', function () {
     return view('welcome');
 });
