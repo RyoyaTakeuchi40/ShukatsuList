@@ -14,9 +14,11 @@ class InterviewFactory extends Factory
      */
     public function definition()
     {
+        $currentYear = date('Y');
+
         return [
             'company_id' => Company::factory(),
-            'interview' => $this->faker->date(),
+            'interview' => $this->faker->date("$currentYear-m-d"),
             'note' => $this->faker->sentence(),
             'result' => $this->faker->numberBetween(0, 4),
         ];

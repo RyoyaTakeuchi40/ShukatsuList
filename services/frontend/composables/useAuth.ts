@@ -14,7 +14,7 @@ export const useAuth = () => {
     (loggedIn: Ref<boolean>, userName: Ref<string>) =>
     async (email: string) => {
       const data = await $fetch("/api/login");
-      if (email == "ryoya.takeuchi@icloud.com") {
+      if (email === "ryoya.takeuchi@icloud.com") {
         cookie.value = data.accessToken;
         loggedIn.value = true;
         userName.value = "りょうや";

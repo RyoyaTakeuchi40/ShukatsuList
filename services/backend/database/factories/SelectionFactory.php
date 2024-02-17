@@ -14,16 +14,18 @@ class SelectionFactory extends Factory
      */
     public function definition()
     {
+        $currentYear = date('Y');
+
         return [
             'company_id' => Company::factory(),
-            'es' => $this->faker->date(),
+            'es' => $this->faker->date("$currentYear-m-d"),
             'es_note' => $this->faker->sentence(),
             'es_result' => $this->faker->numberBetween(0, 4),
-            'test' => $this->faker->date(),
+            'test' => $this->faker->date("$currentYear-m-d"),
             'test_type' => $this->faker->numberBetween(1, 5),
             'test_note' => $this->faker->sentence(),
             'test_result' => $this->faker->numberBetween(0, 4),
-            'gd' => $this->faker->date(),
+            'gd' => $this->faker->date("$currentYear-m-d"),
             'gd_note' => $this->faker->sentence(),
             'gd_result' => $this->faker->numberBetween(0, 4),
             'result' => $this->faker->numberBetween(0, 4),

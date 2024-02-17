@@ -22,6 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', 'App\Http\Controllers\AuthController@register');
 Route::post('/login', 'App\Http\Controllers\AuthController@login');
 
+Route::get('companies', [App\Http\Controllers\CompanyController::class, 'index']);
+
 
 Route::prefix('/')->group(function () {
     
@@ -34,7 +36,4 @@ Route::prefix('/')->group(function () {
     Route::get('/laravel', function () {
         return view('welcome');
     });
-
-
-    Route::get('/test', [TestController::class, 'index']); // 配列で書く
 });
