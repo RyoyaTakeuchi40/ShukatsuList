@@ -24,12 +24,6 @@
         </v-list>
       </v-card-text>
     </v-card>
-    <v-card>
-      <v-card-text>
-        <v-btn color="yellow">TEST</v-btn>
-        <v-card-title>{{ test }}</v-card-title>
-      </v-card-text>
-    </v-card>
   </v-container>
 </template>
 
@@ -39,13 +33,9 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch("http://backend:8000/api");
-
-const { data: test } = await useFetch("http://backend:8000/api/test", {
-  method: "post",
-});
+} = await useFetch("http://backend:8000/api"});
 
 const toHome = () => {
-  navigateTo("/about");
+  navigateTo("/");
 };
 </script>
