@@ -1,5 +1,8 @@
 <template>
-  <v-card>
+  <v-card v-if="loading">
+    <v-card-title>now loading...</v-card-title>
+  </v-card>
+  <v-card v-else>
     <v-data-table
       :headers="headers"
       :items="items"
@@ -71,7 +74,9 @@
             </td>
 
             <td v-else-if="typeof header.key === 'number'">
-              {{ dateFormat(item.interviews[header.key].interview) }}
+              <template v-if="item.interviews[header.key]">
+                {{ dateFormat(item.interviews[header.key].interview) }}
+              </template>
             </td>
 
             <td v-else-if="header.key === 'delete'">
@@ -117,7 +122,10 @@
   </v-card>
 </template>
 <script setup lang="ts">
-const headers = [
+const loading = ref(true);
+const userId = ref(1);
+const select = ref("選考中");
+const headers = ref([
   { title: "", key: "result", sortable: false },
   { title: "", key: "name", sortable: false },
   { title: "", key: "favorite", align: "center" },
@@ -131,240 +139,34 @@ const headers = [
   { title: "ES", key: "es", align: "center" },
   { title: "テスト", key: "test", align: "center" },
   { title: "GD", key: "gd", align: "center" },
-  { title: "1次面接", key: 0, align: "center" },
-  { title: "2次面接", key: 1, align: "center" },
-  { title: "3次面接", key: 2, align: "center" },
   { title: "", key: "delete", sortable: false },
-];
-const items = [
-  {
-    id: 1,
-    name: "株式会社 坂本",
-    favorite: 0,
-    url: "http://www.nakamura.info/id-a-qui-ipsa-reiciendis-ipsam-quisquam.html",
-    login: "Eye7Fmihsn",
-    note: "Ab molestiae earum quod fugiat incidunt quia.",
-    es: "2024-12-26",
-    es_note: "Nihil numquam perspiciatis ut molestiae.",
-    es_result: 2,
-    test: "2024-09-12",
-    test_type: 4,
-    test_note: "Ipsum ea aut deleniti dolores tempore fugit.",
-    test_result: 0,
-    gd: "2024-07-29",
-    gd_note:
-      "Ex voluptatem labore repudiandae voluptatem omnis ut dignissimos.",
-    gd_result: 0,
-    result: 3,
-    interviews: [
-      {
-        id: 3,
-        company_id: 1,
-        interview: "2024-04-09",
-        note: "Est sunt modi praesentium possimus et.",
-        result: 1,
-      },
-      {
-        id: 1,
-        company_id: 1,
-        interview: "2024-07-01",
-        note: "Ipsum voluptas accusamus nihil.",
-        result: 1,
-      },
-      {
-        id: 2,
-        company_id: 1,
-        interview: "2024-10-13",
-        note: "Ipsa voluptatem et corrupti labore.",
-        result: 2,
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "有限会社 西之園",
-    favorite: 0,
-    url: "http://hamada.net/fugiat-culpa-reiciendis-dolorum-commodi-id-quos-sed",
-    login: "8pdMjfPE2i",
-    note: "Qui ut consequatur nisi repellendus animi in.",
-    es: "2024-03-22",
-    es_note: "Occaecati optio eveniet fugit et velit.",
-    es_result: 3,
-    test: "2024-10-01",
-    test_type: 4,
-    test_note: "Qui in et voluptate voluptatibus quia.",
-    test_result: 1,
-    gd: "2024-07-13",
-    gd_note: "Molestias eum sunt earum perspiciatis.",
-    gd_result: 1,
-    result: 0,
-    interviews: [
-      {
-        id: 4,
-        company_id: 2,
-        interview: "2024-03-27",
-        note: "Rerum ut illum et eaque doloribus non repellat.",
-        result: 1,
-      },
-      {
-        id: 5,
-        company_id: 2,
-        interview: "2024-07-02",
-        note: "Natus aut adipisci modi eius.",
-        result: 1,
-      },
-      {
-        id: 6,
-        company_id: 2,
-        interview: "2024-10-17",
-        note: "Corporis quo voluptatibus dignissimos.",
-        result: 3,
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: "有限会社 小泉",
-    favorite: 0,
-    url: "http://www.yamamoto.jp/atque-qui-soluta-aut-repellendus",
-    login: "I1PAYdj2Xc",
-    note: "Sunt ut quaerat sequi sunt rem omnis.",
-    es: "2024-07-28",
-    es_note: "Est unde saepe explicabo facilis.",
-    es_result: 2,
-    test: "2024-06-17",
-    test_type: 5,
-    test_note: "Animi dolores omnis corporis esse.",
-    test_result: 4,
-    gd: "2024-11-05",
-    gd_note: "Culpa ut sequi similique eveniet rerum nam.",
-    gd_result: 4,
-    result: 2,
-    interviews: [
-      {
-        id: 9,
-        company_id: 3,
-        interview: "2024-01-31",
-        note: "Id qui voluptates voluptatem qui et sed dolorem.",
-        result: 3,
-      },
-      {
-        id: 8,
-        company_id: 3,
-        interview: "2024-07-13",
-        note: "Qui natus quisquam laudantium occaecati.",
-        result: 0,
-      },
-      {
-        id: 7,
-        company_id: 3,
-        interview: "2024-10-05",
-        note: "Minus et ab voluptatem sed reprehenderit.",
-        result: 4,
-      },
-    ],
-  },
-  {
-    id: 4,
-    name: "株式会社 喜嶋",
-    favorite: 0,
-    url: "http://koizumi.com/libero-earum-corrupti-voluptate.html",
-    login: "0VVMBttQwo",
-    note: "Molestiae voluptatum harum voluptatibus voluptate autem.",
-    es: "2024-02-04",
-    es_note: "Distinctio in consequatur enim consequatur.",
-    es_result: 2,
-    test: "2024-10-11",
-    test_type: 5,
-    test_note: "Consequatur accusantium odit eum eaque dignissimos.",
-    test_result: 1,
-    gd: "2024-02-27",
-    gd_note: "Ut sapiente vitae aut officiis blanditiis quod.",
-    gd_result: 2,
-    result: 3,
-    interviews: [
-      {
-        id: 12,
-        company_id: 4,
-        interview: "2024-03-04",
-        note: "Quas magnam aliquid architecto distinctio.",
-        result: 3,
-      },
-      {
-        id: 10,
-        company_id: 4,
-        interview: "2024-07-22",
-        note: "Id iste voluptas distinctio voluptatum delectus.",
-        result: 0,
-      },
-      {
-        id: 11,
-        company_id: 4,
-        interview: "2024-12-23",
-        note: "Molestiae molestiae officiis tenetur perferendis.",
-        result: 2,
-      },
-    ],
-  },
-  {
-    id: 5,
-    name: "株式会社 山口",
-    favorite: 0,
-    url: "http://www.saito.biz/voluptatem-rem-commodi-qui-aut-dicta-enim-est",
-    login: "ET2fqmcVEL",
-    note: "Quasi officia odio veniam.",
-    es: "2024-04-18",
-    es_note: "Nihil ex nihil sit aut doloremque et.",
-    es_result: 1,
-    test: "2024-11-05",
-    test_type: 2,
-    test_note: "Earum omnis quas eligendi saepe.",
-    test_result: 1,
-    gd: "2024-08-14",
-    gd_note: "Animi magnam autem nostrum molestiae nam rem dolor.",
-    gd_result: 0,
-    result: 0,
-    interviews: [
-      {
-        id: 14,
-        company_id: 5,
-        interview: "2024-03-28",
-        note: "Velit suscipit et eveniet dolore id.",
-        result: 2,
-      },
-      {
-        id: 13,
-        company_id: 5,
-        interview: "2024-04-21",
-        note: "Facere quo accusantium vel ex odio sit deserunt.",
-        result: 2,
-      },
-      {
-        id: 15,
-        company_id: 5,
-        interview: "2024-12-05",
-        note: "Rem nemo non nesciunt vero excepturi commodi consectetur architecto.",
-        result: 3,
-      },
-    ],
-  },
-];
+]);
+const {
+  data: items,
+  error,
+  pending,
+  refresh,
+} = await useFetch("/api/companies", {
+  query: { userId },
+});
 
-const select = ref("選考中");
-
-const clickRow = (_: any, item: { item: { id: any } }) => {
-  console.log("id:", item.item.id);
-  // window.open(`/${id}`, '_blanck')
+const findMaxInterviewLength = (items: Array<any>) => {
+  let maxLength = 0;
+  for (const item of items) {
+    if (item.interviews && item.interviews.length > maxLength) {
+      maxLength = item.interviews.length;
+    }
+  }
+  return maxLength;
 };
-const clickFavorite = (id: number, favorite: number) => {
-  console.log("Favorite:", id, favorite);
-};
-const clickLink = (url: string) => {
-  console.log("URL:", url);
-  window.open(`${url}`, "_blanck");
-};
-const clickDelete = (id: string) => {
-  console.log("delete:", id);
+const addInterviewsToHeaders = () => {
+  for (let i = 0; i < findMaxInterviewLength(items.value); i++) {
+    headers.value.splice(-1, 0, {
+      title: `${i + 1}次面接`,
+      key: i,
+      align: "center",
+    });
+  }
 };
 
 const filterItems = (result: number, favorite: number) => {
@@ -388,6 +190,22 @@ const filterItems = (result: number, favorite: number) => {
   }
   return true;
 };
+
+const clickRow = (_: any, item: { item: { id: any } }) => {
+  console.log("id:", item.item.id);
+  // window.open(`/${id}`, '_blanck')
+};
+const clickFavorite = (id: number, favorite: number) => {
+  console.log("Favorite:", id, favorite);
+};
+const clickLink = (url: string) => {
+  console.log("URL:", url);
+  window.open(`${url}`, "_blanck");
+};
+const clickDelete = (id: string) => {
+  console.log("delete:", id);
+};
+
 const chipLabel = (result: number) => {
   if (result === 1) {
     return "選考中";
@@ -412,6 +230,40 @@ const chipColor = (result: number) => {
     return "";
   } else {
     return "secondary";
+  }
+};
+const testTypeFormat = (testType: number) => {
+  if (testType === 1) {
+    return "SPI";
+  } else if (testType === 2) {
+    return "玉手箱";
+  } else if (testType === 3) {
+    return "GAB";
+  } else if (testType === 4) {
+    return "CAB";
+  } else if (testType === 5) {
+    return "TG-WEB";
+  } else if (testType === 6) {
+    return "ENG";
+  } else if (testType === 7) {
+    return "CUBIC";
+  } else if (testType === 8) {
+    return "GPS";
+  } else if (testType === 9) {
+    return "技術テスト";
+  } else if (testType === 10) {
+    return "その他";
+  } else {
+    return " ";
+  }
+};
+const dateFormat = (date: string) => {
+  if (date) {
+    const tmpDate = new Date(date);
+    return tmpDate.toLocaleDateString("ja-JP", {
+      month: "short",
+      day: "numeric",
+    });
   }
 };
 const trBgColor = (result: number) => {
@@ -457,40 +309,11 @@ const tdBgColor = (key: string, item: object) => {
     }
   }
 };
-const testTypeFormat = (testType: number) => {
-  if (testType === 1) {
-    return "SPI";
-  } else if (testType === 2) {
-    return "玉手箱";
-  } else if (testType === 3) {
-    return "GAB";
-  } else if (testType === 4) {
-    return "CAB";
-  } else if (testType === 5) {
-    return "TG-WEB";
-  } else if (testType === 6) {
-    return "ENG";
-  } else if (testType === 7) {
-    return "CUBIC";
-  } else if (testType === 8) {
-    return "GPS";
-  } else if (testType === 9) {
-    return "技術テスト";
-  } else if (testType === 10) {
-    return "その他";
-  } else {
-    return " ";
-  }
-};
-const dateFormat = (date: string) => {
-  if (date) {
-    const tmpDate = new Date(date);
-    return tmpDate.toLocaleDateString("ja-JP", {
-      month: "short",
-      day: "numeric",
-    });
-  }
-};
+
+onMounted(() => {
+  addInterviewsToHeaders();
+  loading.value = false;
+});
 </script>
 
 <style scoped></style>
