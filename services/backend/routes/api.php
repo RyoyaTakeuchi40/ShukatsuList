@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\TestController; // ファイル内で使えるようにする
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,11 +27,11 @@ Route::prefix('companies')->name('companies.')
 ->controller(App\Http\Controllers\CompanyController::class)->group(function(){
     Route::get('/', 'index')->name('index');
     // Route::get('/create', 'create')->name('create');
-    // Route::post('/', 'store')->name('store');
+    Route::post('/', 'store')->name('store');
     Route::get('/{id}', 'show')->name('show');
     // Route::get('/{id}/edit', 'edit')->name('edit');
-    // Route::post('/{id}', 'update')->name('update');
-    // Route::post('/{id}/destroy', 'destroy')->name('destroy');
+    Route::post('/{id}', 'update')->name('update');
+    Route::post('/{id}/destroy', 'destroy')->name('destroy');
 });
 
 Route::prefix('/')->group(function () {

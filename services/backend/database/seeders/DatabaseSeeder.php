@@ -23,19 +23,19 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
             ]);
 
-            $companies = Company::factory(5)->create([
-                'user_id' => $user->id,
-            ]);
+            // $companies = Company::factory(5)->create([
+            //     'user_id' => $user->id,
+            // ]);
 
-            foreach ($companies as $company) {
-                Selection::factory()->create([
-                    'company_id' => $company->id,
-                ]);
+            // foreach ($companies as $company) {
+            //     Selection::factory()->create([
+            //         'company_id' => $company->id,
+            //     ]);
 
-                Interview::factory(3)->create([
-                    'company_id' => $company->id,
-                ]);
-            }
+            //     Interview::factory(3)->create([
+            //         'company_id' => $company->id,
+            //     ]);
+            // }
         }
     }
 }

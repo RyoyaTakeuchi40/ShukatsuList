@@ -9,6 +9,14 @@ class Interview extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'company_id',
+        'times',
+        'interview',
+        'note',
+        'result',
+    ];
+
     public function company()
     {
         return $this->belongsTo(Company::class);
