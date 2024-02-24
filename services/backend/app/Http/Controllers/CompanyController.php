@@ -42,16 +42,6 @@ class CompanyController extends Controller
             return response()->json(['message' => 'Companies not found.'], 404);
         }
 
-        // interviews を連想配列に変換
-        $companies->transform(function ($company) {
-            $interviews = [];
-            foreach ($company->interviews as $interview) {
-                $interviews[$interview->id] = $interview->toArray();
-            }
-            $company->interviews = $interviews;
-            return $company;
-        });
-
         return response()->json($companies);
     }
 
@@ -86,13 +76,12 @@ class CompanyController extends Controller
                 
         foreach ($request->interviews as $index => $interview) {
             $company->interviews()->create([
-                'times' => $index,
+                'times' => $index + 1,
                 'interview' => $interview['interview'],
                 'note' => $interview['note'],
             ]);
         }
         
-
         return response()->json(['message' => 'Company created successfully'], 201);
     }
 
@@ -133,13 +122,6 @@ class CompanyController extends Controller
         if (!$company) {
             return response()->json(['message' => 'Company not found.'], 404);
         }
-    
-        // interviews を連想配列に変換
-        $interviews = [];
-        foreach ($company->interviews as $interview) {
-            $interviews[$interview->id] = $interview->toArray();
-        }
-        $company->interviews = $interviews;
     
         return response()->json($company);
     }
@@ -184,11 +166,11 @@ class CompanyController extends Controller
         $interviews = $company->interviews;
         if ($interviews) {
             foreach ($request->interviews as $index => $interviewData) {
-                $interview = $interviews->where('times', $index)->first();
+                $interview = $interviews->where('times', $index + 1)->first();
                 if ($interview) {
                     // 更新
                     $interview->update([
-                        'times' => $index,
+                        'times' => $index + 1,
                         'interview' => $interviewData['interview'],
                         'note' => $interviewData['note'],
                         'result' => $interviewData['result'],
@@ -196,7 +178,7 @@ class CompanyController extends Controller
                 } else {
                     // 入力されたデータの方が多かった場合新規作成
                     $company->interviews()->create([
-                        'times' => $index,
+                        'times' => $index + 1,
                         'interview' => $interviewData['interview'],
                         'note' => $interviewData['note'],
                         'result' => $interviewData['result'],
@@ -207,7 +189,7 @@ class CompanyController extends Controller
             // $interviewsが空の場合は、全て新規作成する
             foreach ($request->interviews as $index => $interviewData) {
                 $company->interviews()->create([
-                    'times' => $index,
+                    'times' => $index + 1,
                     'interview' => $interviewData['interview'],
                     'note' => $interviewData['note'],
                     'result' => $interviewData['result'],
@@ -228,10 +210,10 @@ class CompanyController extends Controller
      */public function destroy($id)
     {
         $company = Company::find($id);
-        
         if (!$company) {
             return response()->json(['message' => 'Company not found.'], 404);
         }
+
         $company->selections()->delete();
         $company->interviews()->delete();
         $company->delete();
