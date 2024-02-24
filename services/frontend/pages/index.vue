@@ -6,7 +6,8 @@
   </template>
   <template v-else-if="error">
     <v-card>
-      <v-card-title>エラーが発生しました。{{ error }}</v-card-title>
+      <v-card-title>エラーが発生しました。</v-card-title>
+      {{ error }}
       <v-btn @click="refresh">リロード</v-btn>
     </v-card>
   </template>
@@ -41,9 +42,8 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch("http://backend:8000/api/companies", {
+} = await useFetch("/api/companies", {
   query: { userId },
-  mode: "cors",
 });
 
 const findMaxInterviewLength = (items: Array<any>) => {
