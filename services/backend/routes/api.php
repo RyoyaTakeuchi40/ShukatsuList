@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\TestController; // ファイル内で使えるようにする
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,12 +17,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// ログインと新規登録のルーティング
+// 認証関連ルーティング
 Route::post('/register', 'App\Http\Controllers\AuthController@register');
 Route::post('/login', 'App\Http\Controllers\AuthController@login');
 
-Route::get('companies', [App\Http\Controllers\CompanyController::class, 'index']);
-
+// Route::resource('contacts', ContactFormController::class);
+// 分解するとこう
+Route::prefix('companies')->name('companies.')
+->controller(App\Http\Controllers\CompanyController::class)->group(function(){
+    Route::get('/', 'index')->name('index');
+    // Route::get('/create', 'create')->name('create');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{id}', 'show')->name('show');
+    // Route::get('/{id}/edit', 'edit')->name('edit');
+    Route::post('/{id}', 'update')->name('update');
+    Route::post('/{id}/destroy', 'destroy')->name('destroy');
+});
 
 Route::prefix('/')->group(function () {
     

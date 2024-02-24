@@ -16,19 +16,19 @@ return new class extends Migration
             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
 
             $table->date('es')->nullable();
-            $table->string('es_note');
-            $table->integer('es_result');
+            $table->string('es_note')->nullable();
+            $table->integer('es_result')->default(0);
 
             $table->date('test')->nullable();
-            $table->integer('test_type');
-            $table->string('test_note');
-            $table->integer('test_result');
+            $table->integer('test_type')->nullable();
+            $table->string('test_note')->nullable();
+            $table->integer('test_result')->default(0);
 
             $table->date('gd')->nullable();
-            $table->string('gd_note');
-            $table->integer('gd_result');
+            $table->string('gd_note')->nullable();
+            $table->integer('gd_result')->default(0);
 
-            $table->integer('result');
+            $table->integer('result')->default(0);
             $table->timestamps();
         });
     }

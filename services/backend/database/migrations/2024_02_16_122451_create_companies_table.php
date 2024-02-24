@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('name');
-            $table->boolean('favorite');
-            $table->string('url');
-            $table->string('login');
-            $table->string('note');
+            $table->boolean('favorite')->default(0);
+            $table->string('url')->nullable();
+            $table->string('login')->nullable();
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }

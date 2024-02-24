@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('interviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->integer('times');
             $table->date('interview')->nullable();
-            $table->string('note');
-            $table->integer('result');
+            $table->string('note')->nullable();
+            $table->integer('result')->default(0);
             $table->timestamps();
         });
     }

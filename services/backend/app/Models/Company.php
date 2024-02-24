@@ -9,6 +9,15 @@ class Company extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'name',
+        'favorite',
+        'url',
+        'login',
+        'note',
+    ];
+
     public function selections() 
     {
         return $this->hasOne(Selection::class);

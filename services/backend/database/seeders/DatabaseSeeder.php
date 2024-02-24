@@ -32,9 +32,13 @@ class DatabaseSeeder extends Seeder
                     'company_id' => $company->id,
                 ]);
 
-                Interview::factory(3)->create([
-                    'company_id' => $company->id,
-                ]);
+                $interviewCount = 3; // 初期のインタビュー数
+                foreach (range(1, $interviewCount) as $index) {
+                    Interview::factory()->state([
+                        'company_id' => $company->id,
+                        'times' => $index,
+                    ])->create();
+                }
             }
         }
     }
