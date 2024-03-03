@@ -1,13 +1,14 @@
 import type { Ref } from "vue";
 
 export const useAuth = () => {
+  const userId = useState("userId", () => 1);
+
   const cookie = useCookie("access_token");
   // サンプルではcookieの存在有無だけ
   // TODO: validate
   const initialValue = cookie.value ? true : false;
 
   const loggedIn = useState("loggedIn", () => initialValue);
-  const userId = useState("userId", () => 0);
   const userName = useState("userName", () => "初期値");
 
   const handleLogin =

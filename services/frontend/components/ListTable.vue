@@ -1,8 +1,8 @@
 <template>
   <v-card>
     <v-data-table
-      :headers="headers"
-      :items="items"
+      :headers="props.headers"
+      :items="props.items"
       :hover="true"
       :hide-no-data="true"
       @click:row="clickRow"

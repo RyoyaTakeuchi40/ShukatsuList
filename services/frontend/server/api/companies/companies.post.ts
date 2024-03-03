@@ -1,8 +1,9 @@
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
-  const query = getQuery(event);
+  const body = await readBody(event);
   const result = await $fetch(`${config.apiServerURL}/companies`, {
-    query: { user_id: query.userId },
+    method: "POST",
+    body: body,
   });
 
   return result;

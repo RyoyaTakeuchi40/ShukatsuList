@@ -7,18 +7,18 @@
   <template v-else-if="error">
     <v-card>
       <v-card-title>エラーが発生しました。</v-card-title>
-      {{ error }}
       <v-btn @click="refresh">リロード</v-btn>
+      {{ error }}
     </v-card>
   </template>
   <template v-else>
     <v-btn @click="refresh">リロード</v-btn>
+    <v-btn @click="navigateTo('/companies/create')">追加登録</v-btn>
     <ListTable :items="items" :headers="headers" />
   </template>
 </template>
 
 <script setup lang="ts">
-const userId = ref(1);
 const loading = ref(true);
 const headers = ref([
   { title: "", key: "result", sortable: false },
@@ -42,10 +42,16 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch("/api/companies", {
-  query: { userId },
-});
+} = await useFetch("/api/companies/companies", { method: "GET" });
 
+watch(pending, () => {
+  if (pending.value == true) {
+    loading.value = true;
+  } else {
+    addInterviewsToHeaders();
+    loading.value = false;
+  }
+});
 const findMaxInterviewLength = (items: Array<any>) => {
   let maxLength = 0;
   for (const item of items) {

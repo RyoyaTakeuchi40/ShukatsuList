@@ -2,8 +2,10 @@
   <v-app-bar color="primary">
     <v-app-bar-title class="font-weight-bold">就活管理</v-app-bar-title>
     <template v-slot:append>
-      <v-app-bar-nav-icon />
-      <v-menu activator=".v-app-bar-nav-icon">
+      <v-menu>
+        <template v-slot:activator="{ props }">
+          <v-app-bar-nav-icon v-bind="props" />
+        </template>
         <v-list :items="items" />
       </v-menu>
     </template>
