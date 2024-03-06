@@ -40,5 +40,4 @@ const changeDate = () => {
     .join("-");
   emits("setDate", formattedDate);
 };
-// @input="(e) => console.log(e.target.value)"
 </script>

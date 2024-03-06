@@ -25,7 +25,9 @@
               '全て',
             ]"
             variant="underlined"
+            class="px-2"
           />
+          <CompaniesAddItemBtn @add-btn-clicked="emits('addBtnClicked')" />
         </v-toolbar>
       </template>
 
@@ -123,6 +125,10 @@
 const props = defineProps<{
   items: Array<any>;
   headers: Array<any>;
+}>();
+
+const emits = defineEmits<{
+  (e: "addBtnClicked"): void;
 }>();
 
 const select = ref("選考中");
