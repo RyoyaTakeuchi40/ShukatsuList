@@ -33,7 +33,7 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch("http://backend:8000/api"});
+} = await useFetch("http://backend:8000/api");
 
 const toHome = () => {
   navigateTo("/");

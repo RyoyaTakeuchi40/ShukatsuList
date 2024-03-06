@@ -12,9 +12,9 @@ class CompanyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $userId = $request->user_id;
+        $userId = 1;
 
         $companies = Company::with(['interviews' => function ($query) {
             $query->select('id', 'company_id', 'times', 'interview', 'result')
@@ -28,12 +28,11 @@ class CompanyController extends Controller
                 'companies.url as url',
                 'companies.login as login',
                 'selections.es as es',
-                'selections.es_result as es_result',
                 'selections.test as test',
-                'selections.test_type as test_type',
-                'selections.test_result as test_result',
+                'selections.test_type as testType',
+                'selections.test_result as testResult',
                 'selections.gd as gd',
-                'selections.gd_result as gd_result',
+                'selections.gd_result as gdResult',
                 'selections.result as result',
             )
             ->where('companies.user_id', $userId)
@@ -58,7 +57,6 @@ class CompanyController extends Controller
         $company = Company::create([
             'user_id' => $userId,
             'name' => $request->name,
-            'favorite' => $request->favorite,
             'url' => $request->url,
             'login' => $request->login,
             'note' => $request->note,
@@ -66,12 +64,12 @@ class CompanyController extends Controller
 
         $company->selections()->create([
             'es' => $request->es,
-            'es_note' => $request->es_note,
+            'es_note' => $request->esNote,
             'test' => $request->test,
-            'test_type' => $request->test_type,
-            'test_note' => $request->test_note,
+            'test_type' => $request->testType,
+            'test_note' => $request->testNote,
             'gd' => $request->gd,
-            'gd_note' => $request->gd_note,
+            'gd_note' => $request->gdNote,
         ]);
                 
         foreach ($request->interviews as $index => $interview) {
@@ -91,7 +89,6 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    
      public function show($id)
     {
         $company = Company::with(['interviews' => function ($query) {
@@ -107,15 +104,15 @@ class CompanyController extends Controller
                 'companies.login as login',
                 'companies.note as note',
                 'selections.es as es',
-                'selections.es_note as es_note',
-                'selections.es_result as es_result',
+                'selections.es_note as esNote',
+                'selections.es_result as esResult',
                 'selections.test as test',
-                'selections.test_type as test_type',
-                'selections.test_note as test_note',
-                'selections.test_result as test_result',
+                'selections.test_type as testType',
+                'selections.test_note as testNote',
+                'selections.test_result as testResult',
                 'selections.gd as gd',
-                'selections.gd_note as gd_note',
-                'selections.gd_result as gd_result',
+                'selections.gd_note as gdNote',
+                'selections.gd_result as gdResult',
                 'selections.result as result',
             )
             ->find($id); // 一件だけ取得
@@ -150,15 +147,15 @@ class CompanyController extends Controller
         if ($selections) {
             $selections->update([
                 'es' => $request->es,
-                'es_note' => $request->es_note,
-                'es_result' => $request->es_result,
+                'es_note' => $request->esNote,
+                'es_result' => $request->esResult,
                 'test' => $request->test,
-                'test_type' => $request->test_type,
-                'test_note' => $request->test_note,
-                'test_result' => $request->test_result,
+                'test_type' => $request->testType,
+                'test_note' => $request->testNote,
+                'test_result' => $request->testResult,
                 'gd' => $request->gd,
-                'gd_note' => $request->gd_note,
-                'gd_result' => $request->gd_result,
+                'gd_note' => $request->gdNote,
+                'gd_result' => $request->gdResult,
                 'result' => $request->result,
             ]);
         }
@@ -207,7 +204,8 @@ class CompanyController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     */public function destroy($id)
+     */
+    public function destroy($id)
     {
         $company = Company::find($id);
         if (!$company) {
