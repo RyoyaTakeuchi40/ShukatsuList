@@ -2,7 +2,7 @@ volumes:
   php-fpm-socket:
   psysh-store:
   mysql-volume:
-  node_modules_volume:
+  nuxt_node_modules:
 
 services:
   app:
@@ -65,7 +65,7 @@ services:
     container_name: shukatsu_front
     volumes:
       - ./services/frontend:/var/www/nuxt
-      - node_modules_volume:/var/www/nuxt/node_modules
+      - nuxt_node_modules:/var/www/nuxt/node_modules
     ports:
       - ${FRONT_PORT}:3000
       - "24678:24678"
