@@ -1,11 +1,6 @@
 <template>
   <NuxtPage />
-  <template v-if="loading">
-    <v-card>
-      <v-card-title>now loading...</v-card-title>
-    </v-card>
-  </template>
-  <template v-else-if="error">
+  <template v-if="error">
     <v-card>
       <v-card-title>エラーが発生しました。</v-card-title>
       <v-btn @click="refresh">リロード</v-btn>
@@ -13,16 +8,24 @@
     </v-card>
   </template>
   <template v-else>
+    <v-overlay :model-value="overlay" class="align-center justify-center">
+      <v-progress-circular
+        color="primary"
+        size="64"
+        indeterminate
+      ></v-progress-circular>
+    </v-overlay>
     <CompaniesListTable
       :items="items"
       :headers="headers"
+      @overlay-start="overlay = true"
       @need-refresh="refresh"
     />
   </template>
 </template>
 
 <script setup lang="ts">
-const loading = ref(true);
+const overlay = ref(true);
 const headers = ref([
   { title: "", key: "result", sortable: false },
   { title: "", key: "name", sortable: false },
@@ -73,15 +76,15 @@ const addInterviewsToHeaders = () => {
 
 onMounted(() => {
   addInterviewsToHeaders();
-  loading.value = false;
+  overlay.value = false;
 });
 
 watch(pending, () => {
   if (pending.value == true) {
-    loading.value = true;
+    overlay.value = true;
   } else {
     addInterviewsToHeaders();
-    loading.value = false;
+    overlay.value = false;
   }
 });
 </script>

@@ -150,6 +150,7 @@
 
 <script setup lang="ts">
 const emits = defineEmits<{
+  (e: "overlayStart"): void;
   (e: "needRefresh"): void;
 }>();
 
@@ -177,6 +178,7 @@ const item = ref({
 const selectTestType = ref([0, 1, 2, 3, 4, 5]);
 
 const addItem = async () => {
+  emits("overlayStart");
   await useFetch("/api/companies", {
     method: "POST",
     body: item.value,

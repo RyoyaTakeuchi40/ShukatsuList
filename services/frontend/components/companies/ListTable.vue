@@ -28,7 +28,10 @@
             variant="underlined"
             class="px-2"
           />
-          <CompaniesAddItemBtn @need-refresh="emits('needRefresh')" />
+          <CompaniesAddItemBtn
+            @overlay-start="emits('overlayStart')"
+            @need-refresh="emits('needRefresh')"
+          />
         </v-toolbar>
       </template>
 
@@ -129,6 +132,7 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
+  (e: "overlayStart"): void;
   (e: "needRefresh"): void;
 }>();
 
@@ -142,6 +146,7 @@ const clickLink = (url: string) => {
   window.open(`${url}`, "_blanck");
 };
 const clickFavorite = async (id: number, favorite: number) => {
+  emits("overlayStart");
   await useFetch(`/api/companies/${id}/favorite`, {
     method: "POST",
     body: { favorite: favorite ? 0 : 1 },
@@ -154,6 +159,7 @@ const clickFavorite = async (id: number, favorite: number) => {
     });
 };
 const clickDelete = async (id: number) => {
+  emits("overlayStart");
   await useFetch(`/api/companies/${id}/destroy`, {
     method: "POST",
   })
@@ -164,6 +170,7 @@ const clickDelete = async (id: number) => {
       console.log(error.value);
     });
 };
+
 const chipLabel = (result: number) => {
   if (result === 1) {
     return "選考中";
