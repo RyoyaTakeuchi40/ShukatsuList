@@ -1,10 +1,6 @@
 <template>
-  <template v-if="loading">
-    <v-card>
-      <v-card-title>now loading...</v-card-title>
-    </v-card>
-  </template>
-  <template v-else-if="error">
+  <NuxtPage />
+  <template v-if="error">
     <v-card>
       <v-card-title>エラーが発生しました。</v-card-title>
       <v-btn @click="refresh">リロード</v-btn>
@@ -12,16 +8,24 @@
     </v-card>
   </template>
   <template v-else>
+    <v-overlay :model-value="overlay" class="align-center justify-center">
+      <v-progress-circular
+        color="primary"
+        size="64"
+        indeterminate
+      ></v-progress-circular>
+    </v-overlay>
     <CompaniesListTable
       :items="items"
       :headers="headers"
-      @add-btn-clicked="refresh"
+      @overlay-start="overlay = true"
+      @need-refresh="refresh"
     />
   </template>
 </template>
 
 <script setup lang="ts">
-const loading = ref(true);
+const overlay = ref(true);
 const headers = ref([
   { title: "", key: "result", sortable: false },
   { title: "", key: "name", sortable: false },
@@ -44,7 +48,7 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch("/api/companies/companies", { method: "GET" });
+} = await useFetch("/api/companies", { method: "GET" });
 
 const findMaxInterviewLength = (items: Array<any>) => {
   let maxLength = 0;
@@ -57,7 +61,11 @@ const findMaxInterviewLength = (items: Array<any>) => {
 };
 
 const addInterviewsToHeaders = () => {
-  for (let i = 0; i < findMaxInterviewLength(items.value); i++) {
+  for (
+    let i = 0;
+    headers.value.length - 8 < findMaxInterviewLength(items.value);
+    i++
+  ) {
     headers.value.splice(-1, 0, {
       title: `${i + 1}次面接`,
       key: i,
@@ -68,15 +76,15 @@ const addInterviewsToHeaders = () => {
 
 onMounted(() => {
   addInterviewsToHeaders();
-  loading.value = false;
+  overlay.value = false;
 });
 
 watch(pending, () => {
   if (pending.value == true) {
-    loading.value = true;
+    overlay.value = true;
   } else {
     addInterviewsToHeaders();
-    loading.value = false;
+    overlay.value = false;
   }
 });
 </script>

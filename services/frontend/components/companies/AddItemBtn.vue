@@ -22,7 +22,7 @@
             variant="outlined"
             density="comfortable"
             hide-details
-            class="my-2"
+            class="mb-2"
           />
 
           <v-text-field
@@ -43,16 +43,14 @@
             class="my-2"
           />
 
-          <v-card>
-            <p class="ma-2 text-xl">ES</p>
+          <v-card title="ES" class="my-2">
             <v-text-field
               v-model="item.es"
-              label="日付"
               type="date"
               variant="outlined"
               density="comfortable"
               hide-details
-              class="w-50 ml-4 mr-2 my-2"
+              class="w-50 ml-4 mr-2 mb-2"
             />
             <v-text-field
               v-model="item.esNote"
@@ -64,25 +62,23 @@
             />
           </v-card>
 
-          <v-card>
-            <p class="ma-2 text-xl">テスト</p>
+          <v-card title="テスト" class="my-2">
             <v-text-field
               v-model="item.test"
-              label="日付"
               type="date"
               variant="outlined"
               density="comfortable"
               hide-details
-              class="w-50 mr-4 ml-4 my-2 d-inline-block"
+              class="w-50 mr-4 ml-4 mbd-2 d-inline-block"
             />
             <v-select
               v-model="item.testType"
-              :items="selectItems"
+              :items="selectTestType"
               label="種類"
               variant="outlined"
               density="comfortable"
               hide-details
-              class="w-25 ml-4 mr-2 my-2 d-inline-block"
+              class="w-25 ml-4 mr-2 mb-2 d-inline-block"
             />
             <v-text-field
               v-model="item.testNote"
@@ -94,16 +90,14 @@
             />
           </v-card>
 
-          <v-card>
-            <p class="ma-2 text-xl">GD</p>
+          <v-card title="GD" class="my-2">
             <v-text-field
               v-model="item.gd"
-              label="日付"
               type="date"
               variant="outlined"
               density="comfortable"
               hide-details
-              class="w-50 ml-4 mr-2 my-2"
+              class="w-50 ml-4 mr-2 mb-2"
             />
             <v-text-field
               v-model="item.gdNote"
@@ -116,16 +110,14 @@
           </v-card>
 
           <template v-for="(interview, i) in item.interviews">
-            <v-card>
-              <p class="ma-2 text-xl">{{ i + 1 }}次面接</p>
+            <v-card :title="`${i + 1}次面接`" class="my-2">
               <v-text-field
-                v-model="item.gd"
-                label="日付"
+                v-model="interview.interview"
                 type="date"
                 variant="outlined"
                 density="comfortable"
                 hide-details
-                class="w-50 ml-4 mr-2 my-2"
+                class="w-50 ml-4 mr-2 mb-2"
               />
               <v-text-field
                 v-model="interview.note"
@@ -138,7 +130,6 @@
             </v-card>
           </template>
         </v-card-text>
-        <v-footer><v-btn text="追加" /></v-footer>
         <v-footer app density="comfortable" class="bg-grey-lighten-2">
           <v-btn icon="mdi-close" @click="sheet = false" />
           <v-spacer />
@@ -159,7 +150,8 @@
 
 <script setup lang="ts">
 const emits = defineEmits<{
-  (e: "addBtnClicked"): void;
+  (e: "overlayStart"): void;
+  (e: "needRefresh"): void;
 }>();
 
 const sheet = ref(false);
@@ -183,24 +175,16 @@ const item = ref({
     },
   ],
 });
-const selectItems = ref([0, 1, 2, 3, 4, 5]);
-
-const setDate = (key: string | number, val: string) => {
-  if (typeof key == "string") {
-    item.value[key] = val;
-  } else {
-    item.value.interviews[key].interview = val;
-  }
-};
+const selectTestType = ref([0, 1, 2, 3, 4, 5]);
 
 const addItem = async () => {
-  await useFetch("/api/companies/companies", {
+  emits("overlayStart");
+  await useFetch("/api/companies", {
     method: "POST",
     body: item.value,
   })
     .then(() => {
-      console.log("Added item!!");
-      emits("addBtnClicked");
+      emits("needRefresh");
     })
     .catch(({ error }) => {
       console.log(error.value);
