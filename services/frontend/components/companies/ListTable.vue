@@ -1,13 +1,14 @@
 <template>
   <v-card>
     <v-data-table
-      :headers="props.headers"
-      :items="props.items"
-      :hover="true"
-      :hide-no-data="true"
-      @click:row="clickRow"
+      :headers="headers"
+      :items="items"
+      hover
+      hide-no-data
+      fixed-header
+      items-per-page="-1"
       item-value="id"
-      class="text-no-wrap"
+      class="my-table text-no-wrap"
     >
       <template v-slot:top>
         <v-toolbar>
@@ -27,12 +28,12 @@
             variant="underlined"
             class="px-2"
           />
-          <CompaniesAddItemBtn @add-btn-clicked="emits('addBtnClicked')" />
+          <CompaniesAddItemBtn @need-refresh="emits('needRefresh')" />
         </v-toolbar>
       </template>
 
       <template v-slot:item="{ item }">
-        <tr>
+        <tr @click="clickRow(item.id)" class="bg-red-lighten-4">
           <template v-for="header in headers">
             <td v-if="header.key === 'result'">
               <v-chip :color="chipColor(item.result)" size="small">
@@ -40,7 +41,7 @@
               </v-chip>
             </td>
 
-            <td v-else-if="header.key === 'name'">
+            <td v-else-if="header.key === 'name'" class="bg-red-lighten-4">
               {{ item.name }}
               <v-btn
                 v-if="item.url"
@@ -59,6 +60,7 @@
                 false-icon="mdi-star-outline"
               />
             </td>
+
             <td v-else-if="header.key === 'login'">
               {{ item[header.key] }}
             </td>
@@ -102,8 +104,7 @@
                       <v-btn
                         text="はい"
                         color="primary"
-                        @click.stop="clickDelete(item.id)"
-                        @click="isActive.value = false"
+                        @click="clickDelete(item.id)"
                       />
                     </v-card-actions>
                   </v-card>
@@ -128,48 +129,32 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: "addBtnClicked"): void;
+  (e: "needRefresh"): void;
 }>();
 
 const select = ref("選考中");
 
-const filterItems = (result: number, favorite: number) => {
-  if (select.value.includes("選考前")) {
-    return result === 0;
-  }
-  if (select.value.includes("選考中")) {
-    return result === 1;
-  }
-  if (select.value.includes("内定")) {
-    return result === 2;
-  }
-  if (select.value.includes("お祈り")) {
-    return result === 3;
-  }
-  if (select.value.includes("辞退")) {
-    return result === 4;
-  }
-  if (select.value.includes("お気に入り")) {
-    return favorite === 1;
-  }
-  return true;
+const filterItems = (result: number, favorite: number) => {};
+const clickRow = (id: number) => {
+  navigateTo(`/companies/${id}`);
 };
-
-const clickRow = (_: any, item: { item: { id: any } }) => {
-  console.log("id:", item.item.id);
-  // window.open(`/${id}`, '_blanck')
+const clickLink = (url: string) => {
+  window.open(`${url}`, "_blanck");
 };
 const clickFavorite = (id: number, favorite: number) => {
   console.log("Favorite:", id, favorite);
 };
-const clickLink = (url: string) => {
-  console.log("URL:", url);
-  window.open(`${url}`, "_blanck");
+const clickDelete = async (id: number) => {
+  await useFetch(`/api/companies/${id}/destroy`, {
+    method: "POST",
+  })
+    .then(() => {
+      emits("needRefresh");
+    })
+    .catch(({ error }) => {
+      console.log(error.value);
+    });
 };
-const clickDelete = (id: string) => {
-  console.log("delete:", id);
-};
-
 const chipLabel = (result: number) => {
   if (result === 1) {
     return "選考中";
@@ -230,49 +215,32 @@ const dateFormat = (date: string) => {
     });
   }
 };
-const trBgColor = (result: number) => {
-  if (result === 1) {
-    return "bg-green-accent-1";
-  } else if (result === 2) {
-    return "bg-blue-accent-1";
-  } else if (result === 3) {
-    return "bg-red-accent-1";
-  } else if (result === 4) {
-    return "bg-grey-darken-1";
-  } else {
-    return "";
-  }
-};
-const tdBgColor_ = (result: number) => {
-  if (result === 1) {
-    return "bg-grey-lighten-4";
-  } else if (result === 2) {
-    return "bg-grey-lighten-2";
-  } else if (result === 3) {
-    return "bg-grey-darken-2";
-  } else if (result === 4) {
-    return "bg-grey";
-  } else {
-    return "";
-  }
-};
-const tdBgColor = (key: string, item: object) => {
-  if (item.result === 1) {
-    if (key === "es") {
-      return tdBgColor_(item.check_es);
-    } else if (key === "test") {
-      return tdBgColor_(item.check_test);
-    } else if (key === "gd") {
-      return tdBgColor_(item.check_gd);
-    } else if (key === "interview_1") {
-      return tdBgColor_(item.check_1);
-    } else if (key === "interview_2") {
-      return tdBgColor_(item.check_2);
-    } else if (key === "interview_3") {
-      return tdBgColor_(item.check_3);
-    }
-  }
-};
+const trBgColor = (result: number) => {};
+const tdBgColor_ = (result: number) => {};
+const tdBgColor = (key: string, item: object) => {};
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-data-table >>> .v-data-table-footer {
+  display: none;
+}
+
+/* ヘッダ（th）の固定 */
+.my-table >>> th:nth-child(2) {
+  position: sticky !important;
+  position: -webkit-sticky !important;
+  left: 0;
+  z-index: 1;
+  background-color: white;
+  border-right: 1px solid grey;
+}
+
+/* 行（td）の固定 */
+.my-table >>> td:nth-child(2) {
+  position: sticky !important;
+  position: -webkit-sticky !important;
+  left: 0;
+  z-index: 1;
+  border-right: 1px solid grey;
+}
+</style>

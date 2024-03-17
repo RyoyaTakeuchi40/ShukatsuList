@@ -1,4 +1,5 @@
 <template>
+  <NuxtPage />
   <template v-if="loading">
     <v-card>
       <v-card-title>now loading...</v-card-title>
@@ -15,7 +16,7 @@
     <CompaniesListTable
       :items="items"
       :headers="headers"
-      @add-btn-clicked="refresh"
+      @need-refresh="refresh"
     />
   </template>
 </template>
@@ -44,7 +45,7 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch("/api/companies/companies", { method: "GET" });
+} = await useFetch("/api/companies", { method: "GET" });
 
 const findMaxInterviewLength = (items: Array<any>) => {
   let maxLength = 0;
@@ -57,7 +58,11 @@ const findMaxInterviewLength = (items: Array<any>) => {
 };
 
 const addInterviewsToHeaders = () => {
-  for (let i = 0; i < findMaxInterviewLength(items.value); i++) {
+  for (
+    let i = 0;
+    headers.value.length - 8 < findMaxInterviewLength(items.value);
+    i++
+  ) {
     headers.value.splice(-1, 0, {
       title: `${i + 1}次面接`,
       key: i,

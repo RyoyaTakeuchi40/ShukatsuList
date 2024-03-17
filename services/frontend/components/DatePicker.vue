@@ -3,7 +3,6 @@
     <template v-slot:activator="{ props: menu }">
       <v-text-field
         v-model="props.date"
-        label="日付"
         append-inner-icon="mdi-calendar"
         readonly
         v-bind="menu"
