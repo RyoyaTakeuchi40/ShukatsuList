@@ -12,8 +12,6 @@
     </v-card>
   </template>
   <template v-else>
-    <nuxt-link to="/companies">&lt;&lt;&lt;戻る</nuxt-link>
-
     <CompaniesDetail :item="item" @edit-btn-clicked="editItem" />
   </template>
 </template>

@@ -37,6 +37,7 @@ Route::prefix('companies')->name('companies.')
     Route::get('/{id}', 'show')->name('show');
     // Route::get('/{id}/edit', 'edit')->name('edit');
     Route::post('/{id}', 'update')->name('update');
+    Route::post('/{id}/favorite', 'favorite')->name('favorite');
     Route::post('/{id}/destroy', 'destroy')->name('destroy');
 });
 

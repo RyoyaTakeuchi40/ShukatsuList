@@ -7,6 +7,10 @@
         required
         variant="plain"
         hide-details="auto"
+        :append-icon="item.favorite ? 'mdi-star' : 'mdi-star-outline'"
+        @click:append="
+          item.favorite ? (item.favorite = 0) : (item.favorite = 1)
+        "
         class="font-weight-bold"
       />
     </v-card-title>
@@ -127,7 +131,7 @@
         </template>
       </v-card-text>
       <v-footer app density="comfortable" class="bg-grey-lighten-2">
-        <v-btn icon="mdi-close" @click="navigateTo('/companies')" />
+        <v-btn icon="mdi-arrow-left" @click="navigateTo('/companies')" />
         <v-spacer />
         <v-toolbar-items>
           <v-btn

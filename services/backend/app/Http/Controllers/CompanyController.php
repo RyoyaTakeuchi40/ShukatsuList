@@ -196,8 +196,25 @@ class CompanyController extends Controller
 
         return response()->json(['message' => 'Company edited successfully'], 200);
     }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function favorite(Request $request, $id)
+    {
+        $company = Company::find($id);
+        if (!$company) {
+            return response()->json(['message' => 'Company not found.'], 404);
+        }
+        $company->favorite = $request->favorite;
+        $company->save();
     
-    
+        return response()->json(['message' => 'Favorite changed successfully'], 200);
+    }
 
     /**
      * Remove the specified resource from storage.

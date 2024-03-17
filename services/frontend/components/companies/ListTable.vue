@@ -141,8 +141,17 @@ const clickRow = (id: number) => {
 const clickLink = (url: string) => {
   window.open(`${url}`, "_blanck");
 };
-const clickFavorite = (id: number, favorite: number) => {
-  console.log("Favorite:", id, favorite);
+const clickFavorite = async (id: number, favorite: number) => {
+  await useFetch(`/api/companies/${id}/favorite`, {
+    method: "POST",
+    body: { favorite: favorite ? 0 : 1 },
+  })
+    .then(() => {
+      emits("needRefresh");
+    })
+    .catch(({ error }) => {
+      console.log(error.value);
+    });
 };
 const clickDelete = async (id: number) => {
   await useFetch(`/api/companies/${id}/destroy`, {
