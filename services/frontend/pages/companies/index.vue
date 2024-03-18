@@ -6,7 +6,6 @@
       {{ error }}
     </v-card>
   </template>
-
   <template v-else>
     <v-overlay v-model="overlay" class="align-center justify-center">
       <v-progress-circular

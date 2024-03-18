@@ -1,10 +1,5 @@
 <template>
-  <template v-if="loading">
-    <v-card>
-      <v-card-title>now loading...</v-card-title>
-    </v-card>
-  </template>
-  <template v-else-if="error">
+  <template v-if="error">
     <v-card>
       <v-card-title>エラーが発生しました。</v-card-title>
       <v-btn @click="refresh">リロード</v-btn>
@@ -12,13 +7,20 @@
     </v-card>
   </template>
   <template v-else>
+    <v-overlay v-model="overlay" class="align-center justify-center">
+      <v-progress-circular
+        color="primary"
+        size="64"
+        indeterminate
+      ></v-progress-circular>
+    </v-overlay>
     <CompaniesDetail :item="item" @edit-btn-clicked="editItem" />
   </template>
 </template>
 
 <script setup lang="ts">
 const route = useRoute();
-const loading = ref(true);
+const overlay = ref(true);
 
 const {
   data: item,
@@ -28,28 +30,26 @@ const {
 } = await useFetch(`/api/companies/${route.params.id}`, { method: "GET" });
 
 const editItem = async () => {
+  overlay.value = true;
   await useFetch(`/api/companies/${route.params.id}`, {
     method: "POST",
     body: item.value,
   })
-    .then(() => {
-      navigateTo("/companies");
+    .then((res) => {
+      const error = res.error.value;
+      if (error) {
+        console.log("error", error);
+      } else {
+        navigateTo("/companies");
+      }
     })
     .catch(({ error }) => {
-      console.log(error.value);
+      console.log("exceptional...", error.value);
     });
 };
 
 onMounted(() => {
-  loading.value = false;
-});
-
-watch(pending, () => {
-  if (pending.value == true) {
-    loading.value = true;
-  } else {
-    loading.value = false;
-  }
+  overlay.value = false;
 });
 </script>
 

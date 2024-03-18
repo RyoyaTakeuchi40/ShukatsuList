@@ -151,11 +151,16 @@ const clickFavorite = async (id: number, favorite: number) => {
     method: "POST",
     body: { favorite: favorite ? 0 : 1 },
   })
-    .then(() => {
-      emits("needRefresh");
+    .then((res) => {
+      const error = res.error.value;
+      if (error) {
+        console.log("error", error);
+      } else {
+        emits("needRefresh");
+      }
     })
     .catch(({ error }) => {
-      console.log(error.value);
+      console.log("exceptional...", error.value);
     });
 };
 const clickDelete = async (id: number) => {
@@ -163,11 +168,16 @@ const clickDelete = async (id: number) => {
   await useFetch(`/api/companies/${id}/destroy`, {
     method: "POST",
   })
-    .then(() => {
-      emits("needRefresh");
+    .then((res) => {
+      const error = res.error.value;
+      if (error) {
+        console.log("error", error);
+      } else {
+        emits("needRefresh");
+      }
     })
     .catch(({ error }) => {
-      console.log(error.value);
+      console.log("exceptional...", error.value);
     });
 };
 

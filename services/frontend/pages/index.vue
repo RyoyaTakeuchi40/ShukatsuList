@@ -14,5 +14,5 @@
 </template>
 
 <script setup>
-const { data, error, pending, refresh } = await useFetch("/api/check");
+const { data, error, pending, refresh } = await useFetch("/api/user");
 </script>

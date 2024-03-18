@@ -13,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-const { handleLogout } = useAuth();
 const items = [
   // {
   //   title: "My Page",
@@ -24,11 +23,11 @@ const items = [
   //   },
   // },
   {
-    title: "Home",
-    value: "home",
+    title: "List",
+    value: "List",
     props: {
-      prependIcon: "mdi-home",
-      to: "/",
+      prependIcon: "mdi-format-list-bulleted",
+      to: "/companies",
     },
   },
   // {
@@ -45,7 +44,7 @@ const items = [
     props: {
       prependIcon: "mdi-logout",
       to: "/login",
-      onClick: handleLogout,
+      // onClick: handleLogout,
     },
   },
   {
@@ -54,21 +53,6 @@ const items = [
     props: {
       prependIcon: "mdi-checkbox-marked-circle",
     },
-  },
-  {
-    title: "about",
-    value: "about",
-    props: { to: "/about" },
-  },
-  {
-    title: "project1",
-    value: "project1",
-    props: { to: "/project/1" },
-  },
-  {
-    title: "project2",
-    value: "project2",
-    props: { to: "/project/2" },
   },
 ];
 </script>

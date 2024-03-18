@@ -183,11 +183,16 @@ const addItem = async () => {
     method: "POST",
     body: item.value,
   })
-    .then(() => {
-      emits("needRefresh");
+    .then((res) => {
+      const error = res.error.value;
+      if (error) {
+        console.log("error", error);
+      } else {
+        emits("needRefresh");
+      }
     })
     .catch(({ error }) => {
-      console.log(error.value);
+      console.log("exceptional...", error.value);
     })
     .finally(() => {
       sheet.value = false;
