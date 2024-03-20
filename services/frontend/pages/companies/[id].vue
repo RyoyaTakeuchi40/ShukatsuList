@@ -27,11 +27,11 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch(`/api/companies/${route.params.id}`, { method: "GET" });
+} = await useApiFetch(`/api/companies/${route.params.id}`, { method: "GET" });
 
 const editItem = async () => {
   overlay.value = true;
-  await useFetch(`/api/companies/${route.params.id}`, {
+  await useApiFetch(`/api/companies/${route.params.id}`, {
     method: "POST",
     body: item.value,
   })

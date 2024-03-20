@@ -38,7 +38,6 @@
             :disabled="!valid"
             @click="login"
           />
-          <v-btn color="info" text="csrf" @click="getCsrf" />
         </v-row>
       </v-card-text>
     </v-form>
@@ -46,7 +45,6 @@
 </template>
 
 <script setup lang="ts">
-const isAuth = useAuth();
 const valid = ref(true);
 const showPassword = ref(false);
 const email = ref("");
@@ -57,14 +55,15 @@ const errors = ref({
 });
 
 const login = async () => {
-  await useFetch("/api/login", {
+  await useApiFetch("/sanctum/csrf-cookie");
+  await useApiFetch("/login", {
     method: "POST",
     body: {
       email: email.value,
       password: password.value,
     },
   })
-    .then((res) => {
+    .then(async (res) => {
       const data = res.data.value;
       const error = res.error.value;
       if (error) {
@@ -75,7 +74,7 @@ const login = async () => {
           console.log("error", error.data);
         }
       } else {
-        isAuth.navigateTo("/");
+        navigateTo("/");
       }
     })
     .catch(({ error }) => {

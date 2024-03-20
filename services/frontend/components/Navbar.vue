@@ -16,7 +16,7 @@
 const isAuth = useAuth();
 
 const logout = async () => {
-  await useFetch("/api/logout", {
+  await useApiFetch("/logout", {
     method: "POST",
   })
     .then((res) => {
@@ -26,7 +26,8 @@ const logout = async () => {
         console.log("error", error.data);
       } else {
         isAuth.value = false;
-        console.log("data", data);
+        const token = useCookie("XSRF-TOKEN");
+        token.value = null;
         navigateTo("/");
       }
     })

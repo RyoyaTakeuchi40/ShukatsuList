@@ -147,7 +147,7 @@ const clickLink = (url: string) => {
 };
 const clickFavorite = async (id: number, favorite: number) => {
   emits("overlayStart");
-  await useFetch(`/api/companies/${id}/favorite`, {
+  await useApiFetch(`/api/companies/${id}/favorite`, {
     method: "POST",
     body: { favorite: favorite ? 0 : 1 },
   })
@@ -165,7 +165,7 @@ const clickFavorite = async (id: number, favorite: number) => {
 };
 const clickDelete = async (id: number) => {
   emits("overlayStart");
-  await useFetch(`/api/companies/${id}/destroy`, {
+  await useApiFetch(`/api/companies/${id}/destroy`, {
     method: "POST",
   })
     .then((res) => {

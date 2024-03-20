@@ -49,7 +49,7 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch("/api/companies", { method: "GET" });
+} = await useApiFetch("/api/companies");
 
 const findMaxInterviewLength = (items: Array<any>) => {
   let maxLength = 0;

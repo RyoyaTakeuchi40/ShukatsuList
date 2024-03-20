@@ -57,7 +57,7 @@ const errors = ref({
 });
 
 const register = async () => {
-  await useFetch("/api/register", {
+  await useApiFetch("/api/register", {
     method: "POST",
     body: {
       name: name.value,

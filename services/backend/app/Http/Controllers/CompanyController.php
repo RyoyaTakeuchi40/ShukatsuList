@@ -81,7 +81,7 @@ class CompanyController extends Controller
             ]);
         }
         
-        return response()->json(['message' => 'Company created successfully'], 201);
+        return response()->json(['message' => 'Company created successfully.'], 201);
     }
 
     /**
@@ -211,7 +211,7 @@ class CompanyController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Company edited successfully'], 200);
+        return response()->json(['message' => 'Company edited successfully.'], 200);
     }
 
     /**
@@ -238,7 +238,7 @@ class CompanyController extends Controller
         $company->favorite = $request->favorite;
         $company->save();
     
-        return response()->json(['message' => 'Favorite changed successfully'], 200);
+        return response()->json(['message' => 'Favorite changed successfully.'], 200);
     }
 
     /**
@@ -265,6 +265,6 @@ class CompanyController extends Controller
         $company->interviews()->delete();
         $company->delete();
 
-        return response()->json(['message' => 'Company and its related data deleted successfully'], 201);
+        return response()->json(['message' => 'Company and its related data deleted successfully.'], 201);
     }
 }

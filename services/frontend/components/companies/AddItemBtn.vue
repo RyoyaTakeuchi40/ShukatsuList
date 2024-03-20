@@ -179,7 +179,7 @@ const selectTestType = ref([0, 1, 2, 3, 4, 5]);
 
 const addItem = async () => {
   emits("overlayStart");
-  await useFetch("/api/companies", {
+  await useApiFetch("/api/companies", {
     method: "POST",
     body: item.value,
   })
