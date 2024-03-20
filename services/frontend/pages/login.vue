@@ -1,61 +1,84 @@
 <template>
-  <v-card>
-    <v-form ref="form" v-model="valid" lazy-validation>
-      <v-text-field
-        v-model="name"
-        :counter="10"
-        :rules="nameRules"
-        label="Name"
-        required
-      ></v-text-field>
-
-      <v-text-field
-        v-model="email"
-        :rules="emailRules"
-        label="E-mail"
-        required
-      ></v-text-field>
-
-      <v-select
-        v-model="select"
-        :items="items"
-        :rules="[(v) => !!v || 'Item is required']"
-        label="Item"
-        required
-      ></v-select>
-
-      <v-checkbox
-        v-model="checkbox"
-        :rules="[(v) => !!v || 'You must agree to continue!']"
-        label="Do you agree?"
-        required
-      ></v-checkbox>
-
-      <v-btn :disabled="!valid" color="success" class="mr-4" @click="submit">
-        Validate
-      </v-btn>
+  <v-card width="400px" class="mx-auto mt-5">
+    <v-card-title class="text-center">就活管理　ログイン</v-card-title>
+    <v-form v-model="valid">
+      <v-card-text>
+        <v-text-field
+          v-model="email"
+          type="email"
+          prepend-icon="mdi-email"
+          label="メールアドレス"
+          :rules="[(v) => !!v || 'メールアドレスを入力してください']"
+          required
+          variant="outlined"
+          class="my-2"
+        />
+        <v-text-field
+          v-model="password"
+          :type="showPassword ? 'text' : 'password'"
+          prepend-icon="mdi-lock"
+          :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append-inner="showPassword = !showPassword"
+          label="パスワード"
+          :rules="[(v) => !!v || 'パスワードを入力してください']"
+          required
+          variant="outlined"
+          class="my-2"
+        />
+        <v-row>
+          <v-btn
+            text="新規登録"
+            variant="text"
+            @click="navigateTo('/register')"
+          />
+          <v-spacer />
+          <v-btn
+            color="info"
+            text="ログイン"
+            :disabled="!valid"
+            @click="login"
+          />
+        </v-row>
+      </v-card-text>
     </v-form>
   </v-card>
 </template>
 
 <script setup lang="ts">
 const valid = ref(true);
-const name = ref("");
-const nameRules = [
-  (v: string) => !!v || "Name is required",
-  (v: string) =>
-    (v && v.length <= 10) || "Name must be less than 10 characters",
-];
+const showPassword = ref(false);
 const email = ref("");
-const emailRules = [
-  (v: string) => !!v || "E-mail is required",
-  (v: string) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-];
-const select = ref<string | null>(null);
-const items = ["Item 1", "Item 2", "Item 3", "Item 4"];
-const checkbox = ref(false);
+const password = ref("");
+const errors = ref({
+  email: [],
+  password: [],
+});
 
-const submit = () => {
-  console.log("submit");
+const login = async () => {
+  await useApiFetch("/sanctum/csrf-cookie");
+  await useApiFetch("/login", {
+    method: "POST",
+    body: {
+      email: email.value,
+      password: password.value,
+    },
+  })
+    .then(async (res) => {
+      const data = res.data.value;
+      const error = res.error.value;
+      if (error) {
+        if (error.data?.statusCode == 422) {
+          errors.value = error.data.data.errors;
+          console.log("422", errors.value);
+        } else {
+          console.log("error", error.data);
+        }
+      } else {
+        navigateTo("/");
+      }
+    })
+    .catch(({ error }) => {
+      console.log("exceptional...", error.value);
+    });
 };
 </script>

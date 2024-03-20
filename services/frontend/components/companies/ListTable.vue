@@ -147,27 +147,37 @@ const clickLink = (url: string) => {
 };
 const clickFavorite = async (id: number, favorite: number) => {
   emits("overlayStart");
-  await useFetch(`/api/companies/${id}/favorite`, {
+  await useApiFetch(`/api/companies/${id}/favorite`, {
     method: "POST",
     body: { favorite: favorite ? 0 : 1 },
   })
-    .then(() => {
-      emits("needRefresh");
+    .then((res) => {
+      const error = res.error.value;
+      if (error) {
+        console.log("error", error);
+      } else {
+        emits("needRefresh");
+      }
     })
     .catch(({ error }) => {
-      console.log(error.value);
+      console.log("exceptional...", error.value);
     });
 };
 const clickDelete = async (id: number) => {
   emits("overlayStart");
-  await useFetch(`/api/companies/${id}/destroy`, {
+  await useApiFetch(`/api/companies/${id}/destroy`, {
     method: "POST",
   })
-    .then(() => {
-      emits("needRefresh");
+    .then((res) => {
+      const error = res.error.value;
+      if (error) {
+        console.log("error", error);
+      } else {
+        emits("needRefresh");
+      }
     })
     .catch(({ error }) => {
-      console.log(error.value);
+      console.log("exceptional...", error.value);
     });
 };
 

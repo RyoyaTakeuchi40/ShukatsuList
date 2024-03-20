@@ -4,29 +4,41 @@
     <v-card-text>
       <v-form>
         <v-text-field
+          v-model="name"
           type="text"
           prepend-icon="mdi-account"
           label="ニックネーム"
-          v-model="name"
+          :error-messages="errors.name"
+          required
+          variant="outlined"
+          class="my-2"
         />
         <v-text-field
+          v-model="email"
           type="email"
           prepend-icon="mdi-email"
           label="メールアドレス"
-          v-model="email"
+          :error-messages="errors.email"
+          required
+          variant="outlined"
+          class="my-2"
         />
         <v-text-field
+          v-model="password"
           :type="showPassword ? 'text' : 'password'"
           prepend-icon="mdi-lock"
           :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append-inner="showPassword = !showPassword"
           label="パスワード"
-          v-model="password"
+          :error-messages="errors.password"
+          required
+          variant="outlined"
+          class="my-2"
         />
-        <v-row>
-          <v-btn text="新規登録" variant="text" @click="register" />
+        <v-row class="my-2">
+          <v-btn text="ログイン" variant="text" @click="navigateTo('/login')" />
           <v-spacer />
-          <v-btn text="ログイン" @click="login" color="info" />
+          <v-btn text="新規登録" color="info" @click="register" />
         </v-row>
       </v-form>
     </v-card-text>
@@ -38,14 +50,37 @@ const showPassword = ref(false);
 const name = ref("");
 const email = ref("");
 const password = ref("");
+const errors = ref({
+  name: [],
+  email: [],
+  password: [],
+});
 
-function login() {
-  console.log(name.value, email.value, password.value);
-  navigateTo("/");
-}
-
-function register() {
-  console.log("register");
-  navigateTo("/register");
-}
+const register = async () => {
+  await useApiFetch("/api/register", {
+    method: "POST",
+    body: {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+    },
+  })
+    .then((res) => {
+      const data = res.data.value;
+      const error = res.error.value;
+      if (error) {
+        if (error.data?.statusCode == 422) {
+          errors.value = error.data.data.errors;
+          console.log("422", errors.value);
+        } else {
+          console.log("error", error);
+        }
+      } else {
+        navigateTo("/login");
+      }
+    })
+    .catch(({ error }) => {
+      console.log("exceptional...", error.value);
+    });
+};
 </script>

@@ -22,27 +22,41 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        return response()->json(['message' => 'User Created Successfully'], 200);
+        return response()->json(['message' => 'User Created Successfully.'], 200);
     }
 
     public function login(Request $request)
     {
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $token = Auth::user()->createToken('AccessToken')->plainTextToken;
-            return response()->json(['token' => $token], 200);
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6'
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            return response()->json(['message' => 'Authenticated.'], 200);
         } else {
-            return response()->json(['error' => '認証に失敗しました。'], 401);
+            return response()->json(['message' => 'Unauthenticated.'], 401);
         }
     }
 
     public function user()
     {
-        return response()->json(Auth::user());
+        return response()->json(Auth::user()->id);
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'ログアウトしました。'], 200);
+        if (!Auth::user()) {
+            return response()->json(['message' => 'Already Unauthenticated.'], 400);
+        }
+        Auth::logout();
+    
+        $request->session()->invalidate();
+    
+        $request->session()->regenerateToken();
+
+        return response()->json(['message' => 'Unauthenticated.'], 200);
     }
 }

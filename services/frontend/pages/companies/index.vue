@@ -1,5 +1,4 @@
 <template>
-  <NuxtPage />
   <template v-if="error">
     <v-card>
       <v-card-title>エラーが発生しました。</v-card-title>
@@ -8,7 +7,7 @@
     </v-card>
   </template>
   <template v-else>
-    <v-overlay :model-value="overlay" class="align-center justify-center">
+    <v-overlay v-model="overlay" class="align-center justify-center">
       <v-progress-circular
         color="primary"
         size="64"
@@ -16,6 +15,7 @@
       ></v-progress-circular>
     </v-overlay>
     <CompaniesListTable
+      v-if="tableDisplay"
       :items="items"
       :headers="headers"
       @overlay-start="overlay = true"
@@ -26,6 +26,7 @@
 
 <script setup lang="ts">
 const overlay = ref(true);
+const tableDisplay = ref(false);
 const headers = ref([
   { title: "", key: "result", sortable: false },
   { title: "", key: "name", sortable: false },
@@ -48,7 +49,7 @@ const {
   error,
   pending,
   refresh,
-} = await useFetch("/api/companies", { method: "GET" });
+} = await useApiFetch("/api/companies");
 
 const findMaxInterviewLength = (items: Array<any>) => {
   let maxLength = 0;
@@ -76,11 +77,12 @@ const addInterviewsToHeaders = () => {
 
 onMounted(() => {
   addInterviewsToHeaders();
+  tableDisplay.value = true;
   overlay.value = false;
 });
 
 watch(pending, () => {
-  if (pending.value == true) {
+  if (pending.value) {
     overlay.value = true;
   } else {
     addInterviewsToHeaders();

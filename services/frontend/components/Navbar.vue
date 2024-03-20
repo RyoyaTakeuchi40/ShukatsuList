@@ -13,39 +13,45 @@
 </template>
 
 <script setup lang="ts">
-const { handleLogout } = useAuth();
+const isAuth = useAuth();
+
+const logout = async () => {
+  await useApiFetch("/logout", {
+    method: "POST",
+  })
+    .then((res) => {
+      const data = res.data.value;
+      const error = res.error.value;
+      if (error) {
+        console.log("error", error.data);
+      } else {
+        isAuth.value = false;
+        const token = useCookie("XSRF-TOKEN");
+        token.value = null;
+        navigateTo("/");
+      }
+    })
+    .catch(({ error }) => {
+      console.log("exceptional...", error.value);
+    });
+};
+
 const items = [
-  // {
-  //   title: "My Page",
-  //   value: "my-page",
-  //   props: {
-  //     prependIcon: "mdi-account",
-  //     to: "/account",
-  //   },
-  // },
   {
-    title: "Home",
-    value: "home",
+    title: "List",
+    value: "List",
     props: {
-      prependIcon: "mdi-home",
-      to: "/",
+      prependIcon: "mdi-format-list-bulleted",
+      to: "/companies",
     },
   },
-  // {
-  //   title: "Dtail",
-  //   value: "detail",
-  //   props: {
-  //     prependIcon: "mdi-close",
-  //     to: "/detail",
-  //   },
-  // },
   {
     title: "Log Out",
     value: "log-out",
     props: {
       prependIcon: "mdi-logout",
       to: "/login",
-      onClick: handleLogout,
+      onClick: logout,
     },
   },
   {
@@ -54,21 +60,6 @@ const items = [
     props: {
       prependIcon: "mdi-checkbox-marked-circle",
     },
-  },
-  {
-    title: "about",
-    value: "about",
-    props: { to: "/about" },
-  },
-  {
-    title: "project1",
-    value: "project1",
-    props: { to: "/project/1" },
-  },
-  {
-    title: "project2",
-    value: "project2",
-    props: { to: "/project/2" },
   },
 ];
 </script>
