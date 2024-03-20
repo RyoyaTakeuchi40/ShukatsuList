@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,20 +12,8 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::prefix('/')->group(function () {
-    
-    Route::get('/', function (){
-        return response()->json([
-            'message'=>'hello world.'
-        ]);
-    });
-
-    Route::get('/laravel', function () {
-        return view('welcome');
-    });
+Route::get('/check', function (){
+    return response()->json([
+        'message'=>'hello world.'
+    ]);
 });
