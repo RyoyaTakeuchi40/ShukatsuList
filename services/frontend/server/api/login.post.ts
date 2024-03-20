@@ -9,7 +9,10 @@ export default defineEventHandler(async (event) => {
   // tokenをcookieに保存
   const devidePoint = result.token.indexOf("|") + 1;
   const token = result.token.substring(devidePoint);
-  setCookie(event, "token", token);
+  setCookie(event, "token", token, {
+    maxAge: 60 * 60 * 24,
+    path: "http://localhost/",
+  });
 
   return result;
 });

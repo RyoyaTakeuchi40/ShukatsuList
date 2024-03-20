@@ -13,15 +13,29 @@
 </template>
 
 <script setup lang="ts">
+const isAuth = useAuth();
+
+const logout = async () => {
+  await useFetch("/api/logout", {
+    method: "POST",
+  })
+    .then((res) => {
+      const data = res.data.value;
+      const error = res.error.value;
+      if (error) {
+        console.log("error", error.data);
+      } else {
+        isAuth.value = false;
+        console.log("data", data);
+        navigateTo("/");
+      }
+    })
+    .catch(({ error }) => {
+      console.log("exceptional...", error.value);
+    });
+};
+
 const items = [
-  // {
-  //   title: "My Page",
-  //   value: "my-page",
-  //   props: {
-  //     prependIcon: "mdi-account",
-  //     to: "/account",
-  //   },
-  // },
   {
     title: "List",
     value: "List",
@@ -30,21 +44,21 @@ const items = [
       to: "/companies",
     },
   },
-  // {
-  //   title: "Dtail",
-  //   value: "detail",
-  //   props: {
-  //     prependIcon: "mdi-close",
-  //     to: "/detail",
-  //   },
-  // },
   {
     title: "Log Out",
     value: "log-out",
     props: {
       prependIcon: "mdi-logout",
       to: "/login",
-      // onClick: handleLogout,
+      onClick: logout,
+    },
+  },
+  {
+    title: "/2",
+    value: "/2",
+    props: {
+      prependIcon: "mdi-logout",
+      to: "/companies/2",
     },
   },
   {

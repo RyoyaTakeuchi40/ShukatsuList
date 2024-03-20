@@ -1,3 +1,5 @@
 export const useAuth = () => {
-  return useState("isAuth", () => false);
+  const token = useCookie("token");
+
+  return useState("isAuth", () => !!token.value);
 };

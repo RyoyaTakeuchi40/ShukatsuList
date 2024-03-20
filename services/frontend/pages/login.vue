@@ -3,7 +3,6 @@
     <v-card-title class="text-center">就活管理　ログイン</v-card-title>
     <v-form v-model="valid">
       <v-card-text>
-        {{ isAuth }}
         <v-text-field
           v-model="email"
           type="email"
@@ -75,6 +74,7 @@ const login = async () => {
           console.log("error", error.data);
         }
       } else {
+        isAuth.value = true;
         navigateTo("/");
       }
     })

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
@@ -14,7 +15,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $userId = 1;
+        $user_id = Auth::user()->id;
 
         $companies = Company::with(['interviews' => function ($query) {
             $query->select('id', 'company_id', 'times', 'interview', 'result')
@@ -35,7 +36,7 @@ class CompanyController extends Controller
                 'selections.gd_result as gdResult',
                 'selections.result as result',
             )
-            ->where('companies.user_id', $userId)
+            ->where('companies.user_id', $user_id)
             ->get();
         if (!$companies) {
             return response()->json(['message' => 'Companies not found.'], 404);
@@ -52,10 +53,10 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        $userId = 1;
+        $user_id = Auth::user()->id;
 
         $company = Company::create([
-            'user_id' => $userId,
+            'user_id' => $user_id,
             'name' => $request->name,
             'url' => $request->url,
             'login' => $request->login,
@@ -91,6 +92,8 @@ class CompanyController extends Controller
      */
      public function show($id)
     {
+        $user_id = Auth::user()->id;
+
         $company = Company::with(['interviews' => function ($query) {
             $query->select('id', 'company_id', 'times', 'interview', 'note', 'result')
                 ->orderBy('times', 'asc');
@@ -98,6 +101,7 @@ class CompanyController extends Controller
             ->leftJoin('selections', 'companies.id', '=', 'selections.company_id')
             ->select(
                 'companies.id as id',
+                'companies.user_id as user_id',
                 'companies.name as name',
                 'companies.favorite as favorite',
                 'companies.url as url',
@@ -120,6 +124,11 @@ class CompanyController extends Controller
             return response()->json(['message' => 'Company not found.'], 404);
         }
     
+        // ユーザーIDのチェック
+        if ($company->user_id !== $user_id) {
+            return response()->json(['message' => 'Unauthorized.'], 403);
+        }
+
         return response()->json($company);
     }
      
@@ -132,10 +141,18 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user_id = Auth::user()->id;
+
         $company = Company::find($id);
         if (!$company) {
             return response()->json(['message' => 'Company not found.'], 404);
         }
+    
+        // ユーザーIDのチェック
+        if ($company->user_id !== $user_id) {
+            return response()->json(['message' => 'Unauthorized.'], 403);
+        }
+
         $company->name = $request->name;
         $company->favorite = $request->favorite;
         $company->url = $request->url;
@@ -206,10 +223,18 @@ class CompanyController extends Controller
      */
     public function favorite(Request $request, $id)
     {
+        $user_id = Auth::user()->id;
+
         $company = Company::find($id);
         if (!$company) {
             return response()->json(['message' => 'Company not found.'], 404);
         }
+    
+        // ユーザーIDのチェック
+        if ($company->user_id !== $user_id) {
+            return response()->json(['message' => 'Unauthorized.'], 403);
+        }
+
         $company->favorite = $request->favorite;
         $company->save();
     
@@ -224,9 +249,16 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
+        $user_id = Auth::user()->id;
+
         $company = Company::find($id);
         if (!$company) {
             return response()->json(['message' => 'Company not found.'], 404);
+        }
+    
+        // ユーザーIDのチェック
+        if ($company->user_id !== $user_id) {
+            return response()->json(['message' => 'Unauthorized.'], 403);
         }
 
         $company->selections()->delete();

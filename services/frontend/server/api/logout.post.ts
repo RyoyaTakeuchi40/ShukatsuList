@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     method: "POST",
   });
 
-  setCookie(event, "token", "");
+  setCookie(event, "token", "", { path: "http://localhost/" });
 
   return result;
 });

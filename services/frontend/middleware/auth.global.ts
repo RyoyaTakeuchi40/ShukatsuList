@@ -1,5 +1,9 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  if (to.path !== "/login") {
+  const isAuth = useAuth();
+
+  if (to.path === "/login" || to.path === "/register") {
+    return true;
+  } else if (!isAuth.value) {
     return navigateTo("/login");
   }
 });
