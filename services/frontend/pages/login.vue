@@ -38,6 +38,7 @@
             :disabled="!valid"
             @click="login"
           />
+          <v-btn color="info" text="csrf" @click="getCsrf" />
         </v-row>
       </v-card-text>
     </v-form>
@@ -74,8 +75,7 @@ const login = async () => {
           console.log("error", error.data);
         }
       } else {
-        isAuth.value = true;
-        navigateTo("/");
+        isAuth.navigateTo("/");
       }
     })
     .catch(({ error }) => {

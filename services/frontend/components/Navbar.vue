@@ -54,14 +54,6 @@ const items = [
     },
   },
   {
-    title: "/2",
-    value: "/2",
-    props: {
-      prependIcon: "mdi-logout",
-      to: "/companies/2",
-    },
-  },
-  {
     title: "リセット",
     value: "reset",
     props: {
