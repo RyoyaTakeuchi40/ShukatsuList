@@ -36,6 +36,7 @@
 </template>
 
 <script setup lang="ts">
+const { fetchUser } = useAuth();
 const valid = ref(true);
 const showPassword = ref(false);
 const email = ref("");
@@ -65,6 +66,7 @@ const login = async () => {
           console.log("error", error.data);
         }
       } else {
+        await fetchUser();
         navigateTo("/companies");
       }
     })
