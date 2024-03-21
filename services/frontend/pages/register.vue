@@ -1,6 +1,6 @@
 <template>
-  <v-card width="400px" class="mx-auto mt-5">
-    <v-card-title class="text-center">就活管理　新規登録</v-card-title>
+  <v-card max-width="600px" class="mx-auto mt-5">
+    <v-card-title class="text-center">新規登録</v-card-title>
     <v-card-text>
       <v-form>
         <v-text-field
@@ -32,11 +32,13 @@
           label="パスワード"
           :error-messages="errors.password"
           required
+          hint="8〜16文字の半角英数字"
+          persistent-hint
           variant="outlined"
-          class="my-2"
+          class="mt-2 mb-8"
         />
-        <v-row class="my-2">
-          <v-btn text="ログイン" variant="text" @click="navigateTo('/login')" />
+        <v-row>
+          <v-btn text="戻る" @click="navigateTo('/login')" />
           <v-spacer />
           <v-btn text="新規登録" color="info" @click="register" />
         </v-row>
@@ -69,11 +71,11 @@ const register = async () => {
       const data = res.data.value;
       const error = res.error.value;
       if (error) {
-        if (error.data?.statusCode == 422) {
-          errors.value = error.data.data.errors;
+        if (error.data?.errors) {
+          errors.value = error.data.errors;
           console.log("422", errors.value);
         } else {
-          console.log("error", error);
+          console.log("error", error.data);
         }
       } else {
         navigateTo("/login");
