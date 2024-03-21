@@ -2,8 +2,6 @@
 
 return [
 
-    /* メッセージの内容がご自身のアプリに適さない場合には、必要に応じて修正願います */
-
     'accepted' => ':attributeを承認してください。',
     'accepted_if' => ':otherが:valueの場合、:attributeを承認してください。',
     'active_url' => ':attributeが有効なURLではありません。',
@@ -13,7 +11,7 @@ return [
     'alpha_dash' => ':attributeはアルファベットとダッシュ(-)及び下線(_)がご利用できます。',
     'alpha_num' => ':attributeはアルファベット数字がご利用できます。',
     'array' => ':attributeは配列でなくてはなりません。',
-    'ascii' => ':attributeは半角の英数字や記号のみで指定してください。',
+    'ascii' => ':attributeは半角の英数字のみで指定してください。',
     'before' => ':attributeには、:dateより前の日付をご利用ください。',
     'before_or_equal' => ':attributeには、:date以前の日付をご利用ください。',
     'between' => [
@@ -39,7 +37,7 @@ return [
     'distinct' => ':attributeには異なった値を指定してください。',
     'doesnt_end_with' => ':attributeは、:values以外の値で終わるように指定してください。',
     'doesnt_start_with' => ':attributeは、:values以外の値で始まるように指定してください。',
-    'email' => ':attributeには、有効なメールアドレスを指定してください。',
+    'email' => ':attributeの形式が正しくありません。',
     'ends_with' => ':attributeには、:valuesのどれかで終わる値を指定してください。',
     'enum' => '選択された:attributeは正しくありません。',
     'exists' => '選択された:attributeは正しくありません。',
@@ -143,7 +141,7 @@ return [
     'starts_with' => ':attributeには、:valuesのどれかで始まる値を指定してください。',
     'string' => ':attributeは文字列を指定してください。',
     'timezone' => ':attributeには、有効なゾーンを指定してください。',
-    'unique' => ':attributeの値は既に存在しています。',
+    'unique' => 'この:attributeは既に存在しています。',
     'uploaded' => ':attributeのアップロードに失敗しました。',
     'uppercase' => ':attributeは、大文字のみで指定してください。',
     'url' => ':attributeに正しい形式を指定してください。',

@@ -1,6 +1,6 @@
 <template>
-  <v-card width="400px" class="mx-auto mt-5">
-    <v-card-title class="text-center">就活管理　ログイン</v-card-title>
+  <v-card max-width="600px" class="mx-auto mt-5">
+    <v-card-title class="text-center">ログイン</v-card-title>
     <v-form v-model="valid">
       <v-card-text>
         <v-text-field
@@ -8,7 +8,7 @@
           type="email"
           prepend-icon="mdi-email"
           label="メールアドレス"
-          :rules="[(v) => !!v || 'メールアドレスを入力してください']"
+          :error-messages="errors.email"
           required
           variant="outlined"
           class="my-2"
@@ -20,24 +20,15 @@
           :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append-inner="showPassword = !showPassword"
           label="パスワード"
-          :rules="[(v) => !!v || 'パスワードを入力してください']"
+          :error-messages="errors.password"
           required
           variant="outlined"
-          class="my-2"
+          class="mt-2 mb-8"
         />
         <v-row>
-          <v-btn
-            text="新規登録"
-            variant="text"
-            @click="navigateTo('/register')"
-          />
+          <v-btn text="新規登録" @click="navigateTo('/register')" />
           <v-spacer />
-          <v-btn
-            color="info"
-            text="ログイン"
-            :disabled="!valid"
-            @click="login"
-          />
+          <v-btn color="info" text="ログイン" @click="login" />
         </v-row>
       </v-card-text>
     </v-form>
@@ -67,8 +58,8 @@ const login = async () => {
       const data = res.data.value;
       const error = res.error.value;
       if (error) {
-        if (error.data?.statusCode == 422) {
-          errors.value = error.data.data.errors;
+        if (error.data?.errors) {
+          errors.value = error.data.errors;
           console.log("422", errors.value);
         } else {
           console.log("error", error.data);

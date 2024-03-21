@@ -1,8 +1,10 @@
 <template>
   <v-app-bar color="primary">
-    <v-app-bar-title class="font-weight-bold">就活管理</v-app-bar-title>
+    <v-app-bar-title class="font-weight-bold"
+      >就活管理{{ isAuth }}</v-app-bar-title
+    >
     <template v-slot:append>
-      <v-menu>
+      <v-menu v-if="isAuth">
         <template v-slot:activator="{ props }">
           <v-app-bar-nav-icon v-bind="props" />
         </template>

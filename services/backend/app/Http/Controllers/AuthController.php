@@ -7,14 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
     public function register(Request $request) {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|unique:users|email',
-            'password' => 'required|min:6'
+            'name' => ['required'],
+            'email' => ['required','unique:users','email'],
+            'password' => ['required','min:8','max:16','ascii',Password::min(8)->letters()->numbers()]
         ]);
 
          User::create([
@@ -29,7 +30,7 @@ class AuthController extends Controller
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required|min:6'
+            'password' => 'required'
         ]);
 
         if (Auth::attempt($credentials)) {
@@ -37,6 +38,17 @@ class AuthController extends Controller
 
             return response()->json(['message' => 'Authenticated.'], 200);
         } else {
+            $user = User::where('email', $request->email)->first();
+            if (! $user) {
+                return response()->json([
+                    'errors' => ['email' => [trans('passwords.user')]]
+                ], 422);
+            }
+            if (! Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'errors' => ['password' => [trans('auth.password')]]
+                ], 422);
+            }
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
     }
@@ -48,7 +60,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        if (!Auth::user()) {
+        if (!Auth::check()) {
             return response()->json(['message' => 'Already Unauthenticated.'], 400);
         }
         Auth::logout();

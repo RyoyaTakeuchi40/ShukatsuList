@@ -11,7 +11,6 @@ export const useApiFetch = (
   }
   return useFetch("http://localhost:9000" + path, {
     credentials: "include",
-    watch: false,
     ...options,
     headers: {
       ...headers,
