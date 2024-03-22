@@ -7,13 +7,7 @@
     </v-card>
   </template>
   <template v-else>
-    <v-overlay v-model="overlay" class="align-center justify-center">
-      <v-progress-circular
-        color="primary"
-        size="64"
-        indeterminate
-      ></v-progress-circular>
-    </v-overlay>
+    <Overlay :overlay="overlay" />
     <CompaniesDetail :item="item" @edit-btn-clicked="editItem" />
   </template>
 </template>

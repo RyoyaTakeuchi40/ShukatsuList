@@ -36,7 +36,7 @@
       </template>
 
       <template v-slot:item="{ item }">
-        <tr @click="clickRow(item.id)" class="bg-red-lighten-4">
+        <tr @click="clickRow(item.id)">
           <template v-for="header in headers">
             <td v-if="header.key === 'result'">
               <v-chip :color="chipColor(item.result)" size="small">
@@ -44,7 +44,7 @@
               </v-chip>
             </td>
 
-            <td v-else-if="header.key === 'name'" class="bg-red-lighten-4">
+            <td v-else-if="header.key === 'name'">
               {{ item.name }}
               <v-btn
                 v-if="item.url"
@@ -267,6 +267,7 @@ const tdBgColor = (key: string, item: object) => {};
   position: -webkit-sticky !important;
   left: 0;
   z-index: 1;
+  background-color: white;
   border-right: 1px solid grey;
 }
 </style>
