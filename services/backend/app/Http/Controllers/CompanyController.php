@@ -18,31 +18,47 @@ class CompanyController extends Controller
         $user_id = Auth::user()->id;
 
         $companies = Company::with(['interviews' => function ($query) {
-            $query->select('id', 'company_id', 'times', 'interview', 'result')
-                ->orderBy('times', 'asc');
-        }])
-            ->leftJoin('selections', 'companies.id', '=', 'selections.company_id')
-            ->select(
-                'companies.id as id',
-                'companies.name as name',
-                'companies.favorite as favorite',
-                'companies.url as url',
-                'companies.login as login',
-                'selections.es as es',
-                'selections.test as test',
-                'selections.test_type as testType',
-                'selections.test_result as testResult',
-                'selections.gd as gd',
-                'selections.gd_result as gdResult',
-                'selections.result as result',
-            )
+            $query->orderBy('times', 'asc');
+        }, 'selections'])
             ->where('companies.user_id', $user_id)
             ->get();
+
         if (!$companies) {
             return response()->json(['message' => 'Companies not found.'], 404);
         }
 
-        return response()->json($companies);
+        $formattedCompanies = $companies->map(function ($company) {
+            return [
+                'id' => $company->id,
+                'name' => $company->name,
+                'favorite' => $company->favorite,
+                'url' => $company->url,
+                'login' => $company->login,
+                'es' => [
+                    'date' => $company->selections->es,
+                    'result' => $company->selections->es_result,
+                ],
+                'test' => [
+                    'date' => $company->selections->test,
+                    'type' => $company->selections->test_type,
+                    'result' => $company->selections->test_result,
+                ],
+                'gd' => [
+                    'date' => $company->selections->gd,
+                    'result' => $company->selections->gd_result,
+                ],
+                'result' => $company->selections->result,
+                'interviews' => $company->interviews->map(function ($interview) {
+                    return [
+                        'times' => $interview->times,
+                        'date' => $interview->interview,
+                        'result' => $interview->result,
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json($formattedCompanies);
     }
 
     /**
@@ -64,19 +80,19 @@ class CompanyController extends Controller
         ]);
 
         $company->selections()->create([
-            'es' => $request->es,
-            'es_note' => $request->esNote,
-            'test' => $request->test,
-            'test_type' => $request->testType,
-            'test_note' => $request->testNote,
-            'gd' => $request->gd,
-            'gd_note' => $request->gdNote,
+            'es' => $request->es['date'],
+            'es_note' => $request->es['note'],
+            'test' => $request->test['date'],
+            'test_type' => $request->test['type'],
+            'test_note' => $request->test['note'],
+            'gd' => $request->gd['date'],
+            'gd_note' => $request->gd['note'],
         ]);
                 
         foreach ($request->interviews as $index => $interview) {
             $company->interviews()->create([
                 'times' => $index + 1,
-                'interview' => $interview['interview'],
+                'interview' => $interview['date'],
                 'note' => $interview['note'],
             ]);
         }
@@ -95,31 +111,11 @@ class CompanyController extends Controller
         $user_id = Auth::user()->id;
 
         $company = Company::with(['interviews' => function ($query) {
-            $query->select('id', 'company_id', 'times', 'interview', 'note', 'result')
-                ->orderBy('times', 'asc');
-        }])
-            ->leftJoin('selections', 'companies.id', '=', 'selections.company_id')
-            ->select(
-                'companies.id as id',
-                'companies.user_id as user_id',
-                'companies.name as name',
-                'companies.favorite as favorite',
-                'companies.url as url',
-                'companies.login as login',
-                'companies.note as note',
-                'selections.es as es',
-                'selections.es_note as esNote',
-                'selections.es_result as esResult',
-                'selections.test as test',
-                'selections.test_type as testType',
-                'selections.test_note as testNote',
-                'selections.test_result as testResult',
-                'selections.gd as gd',
-                'selections.gd_note as gdNote',
-                'selections.gd_result as gdResult',
-                'selections.result as result',
-            )
-            ->find($id); // 一件だけ取得
+            $query->orderBy('times', 'asc');
+        }, 'selections'])
+            ->where('companies.user_id', $user_id)
+            ->find($id);
+
         if (!$company) {
             return response()->json(['message' => 'Company not found.'], 404);
         }
@@ -129,7 +125,41 @@ class CompanyController extends Controller
             return response()->json(['message' => 'Unauthorized.'], 403);
         }
 
-        return response()->json($company);
+        $formattedCompany = [
+            'id' => $company->id,
+            'name' => $company->name,
+            'favorite' => $company->favorite,
+            'url' => $company->url,
+            'login' => $company->login,
+            'note' => $company->note,
+            'es' => [
+                'date' => $company->selections->es,
+                'note' => $company->selections->es_note,
+                'result' => $company->selections->es_result,
+            ],
+            'test' => [
+                'date' => $company->selections->test,
+                'type' => $company->selections->test_type,
+                'note' => $company->selections->test_note,
+                'result' => $company->selections->test_result,
+            ],
+            'gd' => [
+                'date' => $company->selections->gd,
+                'note' => $company->selections->gd_note,
+                'result' => $company->selections->gd_result,
+            ],
+            'result' => $company->selections->result,
+            'interviews' => $company->interviews->map(function ($interview) {
+                return [
+                    'times' => $interview->times,
+                    'date' => $interview->interview,
+                    'note' => $interview->note,
+                    'result' => $interview->result,
+                ];
+            }),
+        ];
+
+        return response()->json($formattedCompany);
     }
      
     /**
@@ -163,16 +193,17 @@ class CompanyController extends Controller
         $selections = $company->selections;
         if ($selections) {
             $selections->update([
-                'es' => $request->es,
-                'es_note' => $request->esNote,
-                'es_result' => $request->esResult,
-                'test' => $request->test,
-                'test_type' => $request->testType,
-                'test_note' => $request->testNote,
-                'test_result' => $request->testResult,
-                'gd' => $request->gd,
-                'gd_note' => $request->gdNote,
-                'gd_result' => $request->gdResult,
+
+                'es' => $request->es['date'],
+                'es_note' => $request->es['note'],
+                'es_result' => $request->es['result'],
+                'test' => $request->test['date'],
+                'test_type' => $request->test['type'],
+                'test_note' => $request->test['note'],
+                'test_result' => $request->test['result'],
+                'gd' => $request->gd['date'],
+                'gd_note' => $request->gd['note'],
+                'gd_result' => $request->gd['result'],
                 'result' => $request->result,
             ]);
         }
@@ -184,8 +215,7 @@ class CompanyController extends Controller
                 if ($interview) {
                     // 更新
                     $interview->update([
-                        'times' => $index + 1,
-                        'interview' => $interviewData['interview'],
+                        'interview' => $interviewData['date'],
                         'note' => $interviewData['note'],
                         'result' => $interviewData['result'],
                     ]);
@@ -193,7 +223,7 @@ class CompanyController extends Controller
                     // 入力されたデータの方が多かった場合新規作成
                     $company->interviews()->create([
                         'times' => $index + 1,
-                        'interview' => $interviewData['interview'],
+                        'interview' => $interviewData['date'],
                         'note' => $interviewData['note'],
                         'result' => $interviewData['result'],
                     ]);
@@ -204,7 +234,7 @@ class CompanyController extends Controller
             foreach ($request->interviews as $index => $interviewData) {
                 $company->interviews()->create([
                     'times' => $index + 1,
-                    'interview' => $interviewData['interview'],
+                    'interview' => $interviewData['date'],
                     'note' => $interviewData['note'],
                     'result' => $interviewData['result'],
                 ]);

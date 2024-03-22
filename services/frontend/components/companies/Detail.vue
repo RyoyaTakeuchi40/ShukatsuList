@@ -45,7 +45,7 @@
 
         <v-card title="ES" class="my-2">
           <v-text-field
-            v-model="item.es"
+            v-model="item.es.date"
             type="date"
             variant="outlined"
             density="comfortable"
@@ -53,7 +53,7 @@
             class="w-50 ml-4 mr-2 mb-2"
           />
           <v-text-field
-            v-model="item.esNote"
+            v-model="item.es.note"
             label="メモ"
             variant="outlined"
             density="comfortable"
@@ -64,7 +64,7 @@
 
         <v-card title="テスト" class="my-2">
           <v-text-field
-            v-model="item.test"
+            v-model="item.test.date"
             type="date"
             variant="outlined"
             density="comfortable"
@@ -72,7 +72,7 @@
             class="w-50 mr-4 ml-4 mbd-2 d-inline-block"
           />
           <v-select
-            v-model="item.testType"
+            v-model="item.test.type"
             :items="selectTestType"
             label="種類"
             variant="outlined"
@@ -81,7 +81,7 @@
             class="w-25 ml-4 mr-2 mb-2 d-inline-block"
           />
           <v-text-field
-            v-model="item.testNote"
+            v-model="item.test.note"
             label="メモ"
             variant="outlined"
             density="comfortable"
@@ -92,7 +92,7 @@
 
         <v-card title="GD" class="my-2">
           <v-text-field
-            v-model="item.gd"
+            v-model="item.gd.date"
             type="date"
             variant="outlined"
             density="comfortable"
@@ -100,7 +100,7 @@
             class="w-50 ml-4 mr-2 mb-2"
           />
           <v-text-field
-            v-model="item.gdNote"
+            v-model="item.gd.note"
             label="メモ"
             variant="outlined"
             density="comfortable"
@@ -112,7 +112,7 @@
         <template v-for="(interview, i) in item.interviews">
           <v-card :title="`${i + 1}次面接`" class="my-2">
             <v-text-field
-              v-model="interview.interview"
+              v-model="interview.date"
               type="date"
               variant="outlined"
               density="comfortable"

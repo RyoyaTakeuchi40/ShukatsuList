@@ -71,15 +71,18 @@
             <td
               v-else-if="header.key === 'test'"
               class="d-flex justify-between align-center"
-              :class="tdBgColor(header.key, item)"
+              :class="tdBgColor(header.key)"
             >
-              <div>{{ dateFormat(item.test) }}　</div>
-              <div>{{ testTypeFormat(item.test_type) }}</div>
+              <div>{{ dateFormat(item.test.date) }}　</div>
+              <div>{{ testTypeFormat(item.test.type) }}</div>
             </td>
 
-            <td v-else-if="typeof header.key === 'number'">
+            <td
+              v-else-if="typeof header.key === 'number'"
+              :class="tdBgColor(header.key)"
+            >
               <template v-if="item.interviews[header.key]">
-                {{ dateFormat(item.interviews[header.key].interview) }}
+                {{ dateFormat(item.interviews[header.key].date) }}
               </template>
             </td>
 
@@ -115,8 +118,8 @@
               </v-dialog>
             </td>
 
-            <td v-else :class="tdBgColor(header.key, item)">
-              {{ dateFormat(item[header.key]) }}
+            <td v-else :class="tdBgColor(header.key)">
+              {{ dateFormat(item[header.key].date) }}
             </td>
           </template>
         </tr>
@@ -241,9 +244,7 @@ const dateFormat = (date: string) => {
     });
   }
 };
-const trBgColor = (result: number) => {};
-const tdBgColor_ = (result: number) => {};
-const tdBgColor = (key: string, item: object) => {};
+const tdBgColor = (result: number) => {};
 </script>
 
 <style scoped>
