@@ -25,7 +25,7 @@ export const useAuth = () => {
           console.log("error", error.data);
         } else {
           user.value = null;
-          navigateTo("/");
+          navigateTo("/login");
         }
       })
       .catch(({ error }) => {

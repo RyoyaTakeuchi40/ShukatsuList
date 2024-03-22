@@ -1,4 +1,5 @@
 <template>
+  <Overlay :overlay="overlay" />
   <v-card max-width="600px" class="mx-auto mt-5">
     <v-card-title class="text-center">新規登録</v-card-title>
     <v-card-text>
@@ -48,6 +49,7 @@
 </template>
 
 <script setup lang="ts">
+const overlay = ref(false);
 const showPassword = ref(false);
 const name = ref("");
 const email = ref("");
@@ -59,6 +61,7 @@ const errors = ref({
 });
 
 const register = async () => {
+  overlay.value = true;
   await useApiFetch("/api/register", {
     method: "POST",
     body: {
@@ -83,6 +86,9 @@ const register = async () => {
     })
     .catch(({ error }) => {
       console.log("exceptional...", error.value);
+    })
+    .finally(() => {
+      overlay.value = false;
     });
 };
 </script>

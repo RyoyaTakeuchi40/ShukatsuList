@@ -1,4 +1,5 @@
 <template>
+  <Overlay :overlay="overlay" />
   <v-card max-width="600px" class="mx-auto mt-5">
     <v-card-title class="text-center">ログイン</v-card-title>
     <v-form v-model="valid">
@@ -37,6 +38,7 @@
 
 <script setup lang="ts">
 const { fetchUser } = useAuth();
+const overlay = ref(false);
 const valid = ref(true);
 const showPassword = ref(false);
 const email = ref("");
@@ -47,6 +49,7 @@ const errors = ref({
 });
 
 const login = async () => {
+  overlay.value = true;
   await useApiFetch("/sanctum/csrf-cookie");
   await useApiFetch("/login", {
     method: "POST",

@@ -1,7 +1,7 @@
 <template>
   <v-app-bar color="primary">
     <v-app-bar-title class="font-weight-bold"
-      >就活管理 {{ isLoggedIn }}</v-app-bar-title
+      >就活管理</v-app-bar-title
     >
     <template v-slot:append>
       <v-menu v-if="isLoggedIn">
@@ -19,7 +19,7 @@ const { isLoggedIn, logout } = useAuth();
 
 const items = [
   {
-    title: "List",
+    title: "一覧",
     value: "List",
     props: {
       prependIcon: "mdi-format-list-bulleted",
@@ -27,19 +27,11 @@ const items = [
     },
   },
   {
-    title: "Log Out",
+    title: "ログアウト",
     value: "log-out",
     props: {
       prependIcon: "mdi-logout",
-      to: "/login",
       onClick: logout,
-    },
-  },
-  {
-    title: "リセット",
-    value: "reset",
-    props: {
-      prependIcon: "mdi-checkbox-marked-circle",
     },
   },
 ];
