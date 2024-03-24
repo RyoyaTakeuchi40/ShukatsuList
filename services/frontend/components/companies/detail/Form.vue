@@ -1,18 +1,37 @@
 <template>
   <v-card>
-    <v-card-title>
-      <v-text-field
-        v-model="item.name"
-        :error-messages="errors.name"
-        required
+    <v-card-title class="d-flex">
+      <v-col cols="8">
+        <v-text-field
+          v-model="item.name"
+          :error-messages="errors.name"
+          required
+          variant="plain"
+          hide-details="auto"
+          :prepend-inner-icon="item.favorite ? 'mdi-star' : 'mdi-star-outline'"
+          @click:prepend-inner="
+            item.favorite ? (item.favorite = 0) : (item.favorite = 1)
+          "
+          class="font-weight-bold"
+        />
+      </v-col>
+      <v-spacer />
+      <v-select
+        v-model="item.result"
+        :items="[0, 1, 2, 3, 4]"
         variant="plain"
-        hide-details="auto"
-        :append-icon="item.favorite ? 'mdi-star' : 'mdi-star-outline'"
-        @click:append="
-          item.favorite ? (item.favorite = 0) : (item.favorite = 1)
-        "
-        class="font-weight-bold"
-      />
+        hide-details
+        class="align-center"
+      >
+        <template v-slot:item="{ props, item }">
+          <v-list-item v-bind="props" title="">
+            <CompaniesStatusChip :result="item.raw" size="default" />
+          </v-list-item>
+        </template>
+        <template v-slot:chip>
+          <CompaniesStatusChip :result="item.result" size="default" />
+        </template>
+      </v-select>
     </v-card-title>
     <v-form>
       <v-card-text>

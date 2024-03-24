@@ -1,7 +1,7 @@
 <template>
   <v-card class="my-4">
     <v-card-title class="d-flex align-center">
-      <span class="w-50">{{ title }}</span>
+      <v-col cols="8">{{ title }}</v-col>
       <v-spacer />
       <v-select
         v-if="typeof value.result !== 'undefined'"

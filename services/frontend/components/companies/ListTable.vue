@@ -46,6 +46,8 @@
       <template v-slot:top>
         <v-toolbar class="pt-2">
           <v-spacer />
+          <v-spacer />
+          <v-spacer />
           <v-select
             v-model="select"
             :items="['選考前', '選考中', '内定', 'お祈り', '辞退']"
