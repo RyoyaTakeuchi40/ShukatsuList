@@ -1,4 +1,14 @@
 export const useFormat = () => {
+  const dateFormat = computed(() => (date: string) => {
+    if (date) {
+      const tmpDate = new Date(date);
+      return tmpDate.toLocaleDateString("ja-JP", {
+        month: "short",
+        day: "numeric",
+      });
+    }
+  });
+
   const testTypeFormat = computed(() => (testType: number) => {
     if (testType === 1) {
       return "SPI";
@@ -21,19 +31,22 @@ export const useFormat = () => {
     } else if (testType === 10) {
       return "その他";
     } else {
-      return " ";
+      return "";
     }
   });
-  
-  const dateFormat = computed(() => (date: string) => {
-    if (date) {
-      const tmpDate = new Date(date);
-      return tmpDate.toLocaleDateString("ja-JP", {
-        month: "short",
-        day: "numeric",
-      });
+
+  const resultFormat = computed(() => (result: number) => {
+    if (result === 1) {
+      return "選考中";
+    } else if (result === 2) {
+      return "通　過";
+    } else if (result === 3) {
+      return "お祈り";
+    } else if (result === 4) {
+      return "辞　退";
+    } else {
+      return "選考前";
     }
   });
-  
-  return { testTypeFormat, dateFormat };
+  return { dateFormat, testTypeFormat, resultFormat };
 };

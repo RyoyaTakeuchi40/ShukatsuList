@@ -8,7 +8,12 @@
   </template>
   <template v-else>
     <Overlay :overlay="overlay" />
-    <CompaniesDetail :item="item" @edit-btn-clicked="editItem" />
+    <CompaniesDetailForm
+      :item="item"
+      @editBtnClicked="editItem"
+      @addInterview="addInterview"
+      @deleteInterview="deleteInterview"
+    />
   </template>
 </template>
 
@@ -40,6 +45,16 @@ const editItem = async () => {
     .catch(({ error }) => {
       console.log("exceptional...", error.value);
     });
+};
+const addInterview = () => {
+  item.value.interviews.push({
+    date: "",
+    note: "",
+    result: 0,
+  });
+};
+const deleteInterview = () => {
+  item.value.interviews.pop();
 };
 
 onMounted(() => {

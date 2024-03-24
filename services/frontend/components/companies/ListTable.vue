@@ -1,4 +1,37 @@
 <template>
+  <v-toolbar density="compact" class="mb-4 bg-transparent">
+    <v-toolbar-items>
+      <v-btn
+        v-for="i in 2"
+        :text="i === 1 ? '1日以下' : '３日以下'"
+        :ripple="false"
+        size="small"
+        :class="
+          tdBgColor(
+            0,
+            String(
+              new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                today.getDate() + i
+              )
+            )
+          )
+        "
+      />
+    </v-toolbar-items>
+    <v-spacer />
+    <v-toolbar-items>
+      <v-btn
+        v-for="i in 2"
+        :text="resultFormat(i)"
+        :ripple="false"
+        size="small"
+        :class="tdBgColor(i, undefined)"
+      />
+    </v-toolbar-items>
+  </v-toolbar>
+
   <v-card>
     <v-data-table
       :headers="headers"
@@ -28,32 +61,28 @@
             variant="underlined"
             class="px-2"
           />
-          <CompaniesAddItemBtn
-            @overlay-start="emits('overlayStart')"
-            @need-refresh="emits('needRefresh')"
-          />
         </v-toolbar>
       </template>
 
       <template v-slot:item="{ item }">
         <tr @click="clickRow(item.id)">
           <template v-for="header in headers">
-            <td v-if="header.key === 'result'">
+            <td v-if="header.key === 'result'" class="px-2">
               <CompaniesStatusChip :result="item.result" />
             </td>
 
-            <td v-else-if="header.key === 'name'">
+            <td v-else-if="header.key === 'name'" class="px-2">
               {{ item.name }}
-              <v-btn
+              <v-icon
                 v-if="item.url"
                 icon="mdi-open-in-new"
                 size="small"
-                variant="plain"
+                color="info"
                 @click.stop="clickLink(item.url)"
               />
             </td>
 
-            <td v-else-if="header.key === 'favorite'">
+            <td v-else-if="header.key === 'favorite'" class="px-2">
               <v-checkbox-btn
                 :model-value="item.favorite === 1"
                 @click.stop="clickFavorite(item.id, item.favorite)"
@@ -64,24 +93,6 @@
 
             <td v-else-if="header.key === 'login'">
               {{ item[header.key] }}
-            </td>
-
-            <td
-              v-else-if="header.key === 'test'"
-              class="d-flex justify-between align-center"
-              :class="tdBgColor(header.key)"
-            >
-              <div>{{ dateFormat(item.test.date) }}　</div>
-              <div>{{ testTypeFormat(item.test.type) }}</div>
-            </td>
-
-            <td
-              v-else-if="typeof header.key === 'number'"
-              :class="tdBgColor(header.key)"
-            >
-              <template v-if="item.interviews[header.key]">
-                {{ dateFormat(item.interviews[header.key].date) }}
-              </template>
             </td>
 
             <td v-else-if="header.key === 'delete'">
@@ -116,11 +127,33 @@
               </v-dialog>
             </td>
 
-            <td v-else :class="tdBgColor(header.key)">
+            <td
+              v-else-if="typeof header.key === 'number'"
+              :class="
+                tdBgColor(
+                  item.interviews[header.key]?.result,
+                  item.interviews[header.key]?.date
+                )
+              "
+            >
+              {{ dateFormat(item.interviews[header.key]?.date) }}
+            </td>
+
+            <td
+              v-else
+              :class="tdBgColor(item[header.key].result, item[header.key].date)"
+            >
               {{ dateFormat(item[header.key].date) }}
             </td>
           </template>
         </tr>
+      </template>
+
+      <template v-slot:bottom>
+        <CompaniesAddItemBtn
+          @overlayStart="emits('needRefresh')"
+          @needRefresh="emits('needRefresh')"
+        />
       </template>
     </v-data-table>
   </v-card>
@@ -136,10 +169,10 @@ const emits = defineEmits<{
   (e: "needRefresh"): void;
 }>();
 
-const { testTypeFormat, dateFormat } = useFormat();
+const { dateFormat, resultFormat } = useFormat();
 const select = ref("選考中");
+const today = ref(new Date());
 
-const filterItems = (result: number, favorite: number) => {};
 const clickRow = (id: number) => {
   navigateTo(`/companies/${id}`);
 };
@@ -181,14 +214,34 @@ const clickDelete = async (id: number) => {
       console.log("exceptional...", error.value);
     });
 };
-const tdBgColor = (result: number) => {};
+
+const filterItems = computed(() => (result: number, favorite: number) => {});
+const tdBgColor = computed(() => (result: number, date: string | undefined) => {
+  if (result === 1) {
+    return "bg-blue-lighten-4";
+  } else if (result === 2) {
+    return "bg-blue-lighten-5";
+  } else if (result === 3) {
+    return "bg-grey-lighten-2";
+  } else if (result === 4) {
+    return "bg-brown-lighten-3";
+  } else {
+    if (!!date) {
+      const loadDate = new Date(date);
+      const diffDays = Math.floor((today.value - loadDate) / 86400000);
+      if (diffDays > -2) {
+        return "bg-red-lighten-4";
+      } else if (diffDays > -4) {
+        return "bg-yellow-lighten-4";
+      }
+    } else {
+      return "";
+    }
+  }
+});
 </script>
 
 <style scoped>
-.v-data-table >>> .v-data-table-footer {
-  display: none;
-}
-
 /* ヘッダ（th）の固定 */
 .my-table >>> th:nth-child(2) {
   position: sticky !important;

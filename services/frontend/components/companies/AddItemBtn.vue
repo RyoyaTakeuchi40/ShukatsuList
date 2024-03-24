@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="sheet = true" text="追加" />
+  <v-btn @click="sheet = true" text="企業情報を追加する" />
 
   <v-bottom-sheet v-model="sheet">
     <v-card rounded height="75vh" class="pa-6 pb-12">
@@ -43,91 +43,11 @@
             class="my-2"
           />
 
-          <v-card title="ES" class="my-2">
-            <v-text-field
-              v-model="item.es.date"
-              type="date"
-              variant="outlined"
-              density="comfortable"
-              hide-details
-              class="w-50 ml-4 mr-2 mb-2"
-            />
-            <v-text-field
-              v-model="item.es.note"
-              label="メモ"
-              variant="outlined"
-              density="comfortable"
-              hide-details
-              class="ml-4 mr-2 my-2"
-            />
-          </v-card>
-
-          <v-card title="テスト" class="my-2">
-            <v-text-field
-              v-model="item.test.date"
-              type="date"
-              variant="outlined"
-              density="comfortable"
-              hide-details
-              class="w-50 mr-4 ml-4 mbd-2 d-inline-block"
-            />
-            <v-select
-              v-model="item.test.type"
-              :items="selectTestType"
-              label="種類"
-              variant="outlined"
-              density="comfortable"
-              hide-details
-              class="w-25 ml-4 mr-2 mb-2 d-inline-block"
-            />
-            <v-text-field
-              v-model="item.test.note"
-              label="メモ"
-              variant="outlined"
-              density="comfortable"
-              hide-details
-              class="ml-4 mr-2 my-2"
-            />
-          </v-card>
-
-          <v-card title="GD" class="my-2">
-            <v-text-field
-              v-model="item.gd.date"
-              type="date"
-              variant="outlined"
-              density="comfortable"
-              hide-details
-              class="w-50 ml-4 mr-2 mb-2"
-            />
-            <v-text-field
-              v-model="item.gd.note"
-              label="メモ"
-              variant="outlined"
-              density="comfortable"
-              hide-details
-              class="ml-4 mr-2 my-2"
-            />
-          </v-card>
-
+          <CompaniesDetailCard title="ES" :value="item.es" />
+          <CompaniesDetailCard title="テスト" :value="item.test" />
+          <CompaniesDetailCard title="GD" :value="item.gd" />
           <template v-for="(interview, i) in item.interviews">
-            <v-card :title="`${i + 1}次面接`" class="my-2">
-              <v-text-field
-                v-model="interview.date"
-                type="date"
-                variant="outlined"
-                density="comfortable"
-                hide-details
-                class="w-50 ml-4 mr-2 mb-2"
-              />
-              <v-text-field
-                v-model="interview.note"
-                label="メモ"
-                variant="outlined"
-                density="comfortable"
-                hide-details
-                class="ml-4 mr-2 my-2"
-              />
-            </v-card>
+            <CompaniesDetailCard :title="`${i + 1}次面接`" :value="interview" />
           </template>
         </v-card-text>
         <v-footer app density="comfortable" class="bg-grey-lighten-2">
