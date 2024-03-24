@@ -3,7 +3,7 @@
     <v-card-title>
       <v-text-field
         v-model="item.name"
-        :rules="[(v) => !!v || '会社名は必須項目です']"
+        :error-messages="errors.name"
         required
         variant="plain"
         hide-details="auto"
@@ -63,23 +63,21 @@
                 <v-btn
                   text="はい"
                   color="primary"
-                  @click="
-                    {
-                      (dialog = false), emits('deleteInterview');
-                    }
-                  "
+                  @click="(dialog = false), emits('deleteInterview')"
                 />
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <!-- <v-btn text="面接を削除する" @click="emits('deleteInterview')" /> -->
           <v-spacer />
           <v-btn text="面接を追加する" @click="emits('addInterview')" />
         </v-sheet>
       </v-card-text>
 
       <v-footer app density="comfortable" class="bg-grey-lighten-2">
-        <v-btn icon="mdi-arrow-left" @click="navigateTo('/companies')" />
+        <v-btn
+          icon="mdi-arrow-left"
+          @click="emits('overlayStart'), navigateTo('/companies')"
+        />
         <v-spacer />
         <v-toolbar-items>
           <v-btn
@@ -97,8 +95,10 @@
 <script setup lang="ts">
 const props = defineProps<{
   item: object;
+  errors: object;
 }>();
 const emits = defineEmits<{
+  (e: "overlayStart"): void;
   (e: "editBtnClicked"): void;
   (e: "addInterview"): void;
   (e: "deleteInterview"): void;

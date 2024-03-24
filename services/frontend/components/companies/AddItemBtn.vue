@@ -7,8 +7,8 @@
         <v-card-text>
           <v-text-field
             v-model="item.name"
-            :rules="[(v) => !!v || '会社名は必須項目です']"
             label="会社名 *"
+            :error-messages="errors.name"
             required
             variant="outlined"
             density="comfortable"
@@ -58,7 +58,6 @@
               color="primary"
               text="追加"
               variant="tonal"
-              :disabled="!valid"
               @click="addItem"
             />
           </v-toolbar-items>
@@ -101,7 +100,9 @@ const item = ref({
     },
   ],
 });
-const selectTestType = ref([0, 1, 2, 3, 4, 5]);
+const errors = ref({
+  name: [],
+});
 
 const addItem = async () => {
   emits("overlayStart");
@@ -112,16 +113,19 @@ const addItem = async () => {
     .then((res) => {
       const error = res.error.value;
       if (error) {
-        console.log("error", error);
+        if (error.data?.errors) {
+          errors.value = error.data.errors;
+          console.log("422", errors.value);
+        } else {
+          console.log("error", error.data);
+        }
       } else {
         emits("needRefresh");
+        sheet.value = false;
       }
     })
     .catch(({ error }) => {
       console.log("exceptional...", error.value);
-    })
-    .finally(() => {
-      sheet.value = false;
     });
 };
 </script>

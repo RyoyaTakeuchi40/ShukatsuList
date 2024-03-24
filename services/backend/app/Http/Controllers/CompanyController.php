@@ -69,6 +69,10 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => ['required'],
+        ]);
+
         $user_id = Auth::user()->id;
 
         $company = Company::create([
@@ -171,6 +175,10 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => ['required'],
+        ]);
+
         $user_id = Auth::user()->id;
 
         $company = Company::find($id);

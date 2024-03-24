@@ -12,4 +12,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!isLoggedIn.value) {
     return navigateTo("/login");
   }
+
+  if (to.path === "/") {
+    return navigateTo("/companies");
+  }
 });

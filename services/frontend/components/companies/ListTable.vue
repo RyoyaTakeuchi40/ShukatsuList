@@ -35,7 +35,7 @@
   <v-card>
     <v-data-table
       :headers="headers"
-      :items="items"
+      :items="filterItems"
       hover
       hide-no-data
       fixed-header
@@ -44,24 +44,27 @@
       class="my-table text-no-wrap"
     >
       <template v-slot:top>
-        <v-toolbar>
-          <v-toolbar-title>選考</v-toolbar-title>
+        <v-toolbar class="pt-2">
           <v-spacer />
           <v-select
             v-model="select"
-            :items="[
-              'お気に入り',
-              '選考前',
-              '選考中',
-              '内定',
-              'お祈り',
-              '辞退',
-              '全て',
-            ]"
+            :items="['選考前', '選考中', '内定', 'お祈り', '辞退']"
+            label="絞り込み"
+            chips
+            multiple
+            clearable
             variant="underlined"
             class="px-2"
           />
         </v-toolbar>
+      </template>
+
+      <template v-slot:header.favorite>
+        <v-checkbox-btn
+          v-model="favorite"
+          true-icon="mdi-star"
+          false-icon="mdi-star-outline"
+        />
       </template>
 
       <template v-slot:item="{ item }">
@@ -82,7 +85,7 @@
               />
             </td>
 
-            <td v-else-if="header.key === 'favorite'" class="px-2">
+            <td v-else-if="header.key === 'favorite'">
               <v-checkbox-btn
                 :model-value="item.favorite === 1"
                 @click.stop="clickFavorite(item.id, item.favorite)"
@@ -170,10 +173,12 @@ const emits = defineEmits<{
 }>();
 
 const { dateFormat, resultFormat } = useFormat();
-const select = ref("選考中");
+const favorite = ref(false);
+const select = ref(["選考中", "選考前"]);
 const today = ref(new Date());
 
 const clickRow = (id: number) => {
+  emits("overlayStart");
   navigateTo(`/companies/${id}`);
 };
 const clickLink = (url: string) => {
@@ -215,7 +220,32 @@ const clickDelete = async (id: number) => {
     });
 };
 
-const filterItems = computed(() => (result: number, favorite: number) => {});
+const filterItems = computed(() => {
+  const filtered = ref([]);
+  if (select.value.includes("選考中")) {
+    filtered.value.push(...props.items.filter((item) => item.result === 1));
+  }
+  if (select.value.includes("選考前")) {
+    filtered.value.push(...props.items.filter((item) => item.result === 0));
+  }
+  if (select.value.includes("内定")) {
+    filtered.value.push(...props.items.filter((item) => item.result === 2));
+  }
+  if (select.value.includes("お祈り")) {
+    filtered.value.push(...props.items.filter((item) => item.result === 3));
+  }
+  if (select.value.includes("辞退")) {
+    filtered.value.push(...props.items.filter((item) => item.result === 4));
+  }
+
+  if (select.value.length === 0) {
+    filtered.value = props.items;
+  }
+  if (favorite.value) {
+    return filtered.value.filter((item) => item.favorite === 1);
+  }
+  return filtered.value;
+});
 const tdBgColor = computed(() => (result: number, date: string | undefined) => {
   if (result === 1) {
     return "bg-blue-lighten-4";

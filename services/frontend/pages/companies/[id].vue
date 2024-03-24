@@ -10,6 +10,8 @@
     <Overlay :overlay="overlay" />
     <CompaniesDetailForm
       :item="item"
+      :errors="errors"
+      @overlayStart="overlay = true"
       @editBtnClicked="editItem"
       @addInterview="addInterview"
       @deleteInterview="deleteInterview"
@@ -27,6 +29,9 @@ const {
   pending,
   refresh,
 } = await useApiFetch(`/api/companies/${route.params.id}`, { method: "GET" });
+const errors = ref({
+  name: [],
+});
 
 const editItem = async () => {
   overlay.value = true;
@@ -37,7 +42,13 @@ const editItem = async () => {
     .then((res) => {
       const error = res.error.value;
       if (error) {
-        console.log("error", error);
+        if (error.data?.errors) {
+          errors.value = error.data.errors;
+          console.log("422", errors.value);
+        } else {
+          console.log("error", error.data);
+        }
+        overlay.value = false;
       } else {
         navigateTo("/companies");
       }
