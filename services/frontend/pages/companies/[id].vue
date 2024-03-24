@@ -1,10 +1,6 @@
 <template>
   <template v-if="error">
-    <v-card>
-      <v-card-title>エラーが発生しました。</v-card-title>
-      <v-btn @click="refresh">リロード</v-btn>
-      {{ error }}
-    </v-card>
+    <ErrorCard />
   </template>
   <template v-else>
     <Overlay :overlay="overlay" />
