@@ -215,9 +215,20 @@ class CompanyController extends Controller
                 'result' => $request->result,
             ]);
         }
-        
+
         $interviews = $company->interviews;
         if ($interviews) {
+            $sentInterviewCount = count($request->interviews);
+            $existingInterviewCount = $interviews->count();
+
+            // 送信されたデータの数が少ない場合、余分なデータを削除する
+            if ($existingInterviewCount > $sentInterviewCount) {
+                $interviewsToDelete = $interviews->slice($sentInterviewCount);
+                foreach ($interviewsToDelete as $interviewToDelete) {
+                    $interviewToDelete->delete();
+                }
+            }
+            
             foreach ($request->interviews as $index => $interviewData) {
                 $interview = $interviews->where('times', $index + 1)->first();
                 if ($interview) {
