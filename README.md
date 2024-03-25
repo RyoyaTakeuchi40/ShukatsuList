@@ -1,1 +1,1 @@
-# Docker_Vue3_Laravel
+# Docker_Nginx_Nuxt3_Laravel10

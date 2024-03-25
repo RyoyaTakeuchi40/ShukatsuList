@@ -1,10 +1,6 @@
 <template>
   <template v-if="error">
-    <v-card>
-      <v-card-title>エラーが発生しました。</v-card-title>
-      <v-btn @click="refresh">リロード</v-btn>
-      {{ error }}
-    </v-card>
+    <ErrorCard />
   </template>
   <template v-else>
     <Overlay :overlay="overlay" />
@@ -12,8 +8,8 @@
       v-if="tableDisplay"
       :items="items"
       :headers="headers"
-      @overlay-start="overlay = true"
-      @need-refresh="refresh"
+      @overlayStart="overlay = true"
+      @needRefresh="refresh"
     />
   </template>
 </template>
@@ -24,7 +20,7 @@ const tableDisplay = ref(false);
 const headers = ref([
   { title: "", key: "result", sortable: false },
   { title: "", key: "name", sortable: false },
-  { title: "", key: "favorite", align: "center" },
+  { title: "", key: "favorite", sortable: false, align: "center" },
   {
     title: "ログインID",
     key: "login",

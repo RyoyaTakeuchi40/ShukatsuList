@@ -68,6 +68,7 @@ const login = async () => {
         } else {
           console.log("error", error.data);
         }
+        overlay.value = false;
       } else {
         await fetchUser();
         navigateTo("/companies");
