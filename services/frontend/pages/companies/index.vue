@@ -1,25 +1,15 @@
 <template>
   <template v-if="error">
-    <v-card>
-      <v-card-title>エラーが発生しました。</v-card-title>
-      <v-btn @click="refresh">リロード</v-btn>
-      {{ error }}
-    </v-card>
+    <ErrorCard />
   </template>
   <template v-else>
-    <v-overlay v-model="overlay" class="align-center justify-center">
-      <v-progress-circular
-        color="primary"
-        size="64"
-        indeterminate
-      ></v-progress-circular>
-    </v-overlay>
+    <Overlay :overlay="overlay" />
     <CompaniesListTable
       v-if="tableDisplay"
       :items="items"
       :headers="headers"
-      @overlay-start="overlay = true"
-      @need-refresh="refresh"
+      @overlayStart="overlay = true"
+      @needRefresh="refresh"
     />
   </template>
 </template>
@@ -30,7 +20,7 @@ const tableDisplay = ref(false);
 const headers = ref([
   { title: "", key: "result", sortable: false },
   { title: "", key: "name", sortable: false },
-  { title: "", key: "favorite", align: "center" },
+  { title: "", key: "favorite", sortable: false, align: "center" },
   {
     title: "ログインID",
     key: "login",

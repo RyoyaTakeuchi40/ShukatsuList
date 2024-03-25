@@ -1,20 +1,17 @@
 <template>
   <template v-if="error">
-    <v-card>
-      <v-card-title>エラーが発生しました。</v-card-title>
-      <v-btn @click="refresh">リロード</v-btn>
-      {{ error }}
-    </v-card>
+    <ErrorCard />
   </template>
   <template v-else>
-    <v-overlay v-model="overlay" class="align-center justify-center">
-      <v-progress-circular
-        color="primary"
-        size="64"
-        indeterminate
-      ></v-progress-circular>
-    </v-overlay>
-    <CompaniesDetail :item="item" @edit-btn-clicked="editItem" />
+    <Overlay :overlay="overlay" />
+    <CompaniesDetailForm
+      :item="item"
+      :errors="errors"
+      @overlayStart="overlay = true"
+      @editBtnClicked="editItem"
+      @addInterview="addInterview"
+      @deleteInterview="deleteInterview"
+    />
   </template>
 </template>
 
@@ -28,6 +25,9 @@ const {
   pending,
   refresh,
 } = await useApiFetch(`/api/companies/${route.params.id}`, { method: "GET" });
+const errors = ref({
+  name: [],
+});
 
 const editItem = async () => {
   overlay.value = true;
@@ -38,7 +38,13 @@ const editItem = async () => {
     .then((res) => {
       const error = res.error.value;
       if (error) {
-        console.log("error", error);
+        if (error.data?.errors) {
+          errors.value = error.data.errors;
+          console.log("422", errors.value);
+        } else {
+          console.log("error", error.data);
+        }
+        overlay.value = false;
       } else {
         navigateTo("/companies");
       }
@@ -46,6 +52,16 @@ const editItem = async () => {
     .catch(({ error }) => {
       console.log("exceptional...", error.value);
     });
+};
+const addInterview = () => {
+  item.value.interviews.push({
+    date: "",
+    note: "",
+    result: 0,
+  });
+};
+const deleteInterview = () => {
+  item.value.interviews.pop();
 };
 
 onMounted(() => {
