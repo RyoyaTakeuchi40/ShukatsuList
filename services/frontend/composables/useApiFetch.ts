@@ -4,6 +4,8 @@ export const useApiFetch = (
   path: string,
   options: UseFetchOptions<any> = {}
 ) => {
+  const runtimeConfig = useRuntimeConfig();
+
   let headers: any = {};
   const token = useCookie("XSRF-TOKEN");
 
@@ -18,7 +20,7 @@ export const useApiFetch = (
     };
   }
 
-  return useFetch("http://localhost:9000" + path, {
+  return useFetch(runtimeConfig.public.apiUrl + path, {
     credentials: "include",
     watch: false,
     ...options,
