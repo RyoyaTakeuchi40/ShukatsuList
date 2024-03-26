@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
@@ -35,8 +34,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
-            return response()->json(['message' => 'Authenticated.'], 200);
+            return response()->json(Auth::user());
         } else {
             $user = User::where('email', $request->email)->first();
             if (! $user) {
@@ -64,11 +62,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'Already Unauthenticated.'], 400);
         }
         Auth::logout();
-    
         $request->session()->invalidate();
-    
         $request->session()->regenerateToken();
-
         return response()->json(['message' => 'Unauthenticated.'], 200);
     }
 }
