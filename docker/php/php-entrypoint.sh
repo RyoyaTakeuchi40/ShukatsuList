@@ -9,7 +9,7 @@ if [ ! -f .env ]; then
     cp .env.example .env
 
     # sqliteファイルを作成
-    touch ./database/database.sqlite 
+    touch ./database/database.sqlite
 
     # Composerのインストール
     composer install
@@ -18,5 +18,8 @@ if [ ! -f .env ]; then
     php artisan key:generate
 
     # マイグレーション実行
-    php artisan migrate
+    php artisan migrate --seed
 fi
+
+# php-fpm起動
+php-fpm 
