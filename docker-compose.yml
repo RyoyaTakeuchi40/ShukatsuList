@@ -30,7 +30,8 @@ services:
       dockerfile: ./docker/nginx/Dockerfile
     container_name: shukatsu_nginx
     ports:
-      - ${WEB_PORT}:80
+      - ${HTTP_WEB_PORT}:80
+      - ${HTTPS_WEB_PORT}:443
       - ${API_PORT}:9000
     volumes:
       - type: volume
@@ -41,6 +42,9 @@ services:
       - type: bind
         source: ./services/backend
         target: /work/backend
+      - ${SSL_CRT_PATH}:/etc/nginx/certs/server.crt
+      - ${SSL_KEY_PATH}:/etc/nginx/certs/server.key
+      - ${SSL_PASS_PATH}:/etc/nginx/certs/server.password
 
   front:
     build:
