@@ -5,7 +5,7 @@ export default defineNuxtConfig({
       apiUrl: process.env.NUXT_PUBLIC_API_URL,
     },
   },
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   ssr: false,
   css: ["vuetify/lib/styles/main.sass"],
   build: {
