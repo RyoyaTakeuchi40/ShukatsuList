@@ -28,3 +28,8 @@ COPY ./docker/php/php-fpm.d/zzz-www.conf /usr/local/etc/php-fpm.d/zzz-www.conf
 COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
 
 WORKDIR /work/backend
+
+ADD ./docker/php/php-entrypoint.sh /
+RUN chmod +x /php-entrypoint.sh
+
+ENTRYPOINT ["/php-entrypoint.sh"]

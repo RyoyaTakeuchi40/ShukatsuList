@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-const { fetchUser } = useAuth();
+const { user } = useAuth();
 const overlay = ref(false);
 const valid = ref(true);
 const showPassword = ref(false);
@@ -70,7 +70,7 @@ const login = async () => {
         }
         overlay.value = false;
       } else {
-        await fetchUser();
+        user.value = data;
         navigateTo("/companies");
       }
     })

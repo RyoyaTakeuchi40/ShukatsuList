@@ -19,7 +19,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::prefix('api')->group(function () {
     Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::get('/user', [App\Http\Controllers\AuthController::class, 'user']);
+        Route::get('/user', [AuthController::class, 'user']);
 
         Route::prefix('companies')->name('companies.')
         ->controller(App\Http\Controllers\CompanyController::class)->group(function(){
